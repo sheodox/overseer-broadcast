@@ -34,6 +34,8 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.end_headers()
             try:
                 while True:
+                    camera.annotate_background = picamera.Color('black')
+                    camera.annotate_text = dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                     with output.condition:
                         output.condition.wait()
                         frame = output.frame
@@ -55,12 +57,12 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True
     daemon_threads = True
 
-with picamera.PiCamera(resolution='640x480', framerate=24) as camera:
-    output = StreamingOutput()
-    camera.start_recording(output, format='mjpeg')
-    try:
-        address = ('', 8000)
-        server = StreamingServer(address, StreamingHandler)
-        server.serve_forever()
-    finally:
-        camera.stop_recording()
+camera = picamera.PiCamera(resolution='1280x720', framerate=24)
+output = StreamingOutput()
+camera.start_recording(output, format='mjpeg')
+try:
+    address = ('', 8000)
+    server = StreamingServer(address, StreamingHandler)
+    server.serve_forever()
+finally:
+    camera.stop_recording()
