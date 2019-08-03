@@ -8,7 +8,7 @@ router.get('/', async (req, res, next) => {
 
 broadcasters.forEach((ip, index) => {
     router.use(`/broadcaster/${index}/`, async (req, res, next) => {
-        req.pipe(request.get(`http://${ip + req.path + query}`)).pipe(res);
+        req.pipe(request.get(`http://${ip + req.path}`)).pipe(res);
     })
 });
 
