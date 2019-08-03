@@ -1,0 +1,17 @@
+{
+  "name": "overseer-cameras",
+  "version": "0.0.0",
+  "description": "View a network of local raspberry pi cameras.",
+  "main": "app.js",
+  "scripts": {
+    "broadcast": "forever start -c python3 broadcast.py",
+    "start": "forever start server.js",
+    "stop": "forever stop server.js"
+  },
+  "author": "sheodox",
+  "dependencies": {
+    "express": "^4.17.1",
+    "pug": "^2.0.4",
+    "request": "^2.88.0"
+  }
+}

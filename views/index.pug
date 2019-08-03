@@ -1,0 +1,12 @@
+doctype html
+html
+    head
+        title= title
+        meta(name='viewport',  content='width=device-width, initial-scale=1')
+        meta(name='theme-color', content='#24252b')
+        link(href='//fonts.googleapis.com/css?family=Roboto', rel="stylesheet")
+        link(href='//fonts.googleapis.com/css?family=Ceviche+One', rel="stylesheet")
+    body
+        h1= title
+        for stream in streams
+            img(src=`broadcaster/${stream}/stream.mjpg`)
