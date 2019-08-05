@@ -1,3 +1,21 @@
-img {
-    max-width: 95vw;
+body {
+    background: #1a1e26;
+    color: white;
+    font-family: "Roboto Light", sans-serif;
 }
+h1 {
+    text-align: center;
+}
+img, div.stream-error {
+    max-width: 95vw;
+    /* maintain aspect ratio */
+    max-height: 53.4375vw;
+    width: 1280px;
+    height: 720px;
+    background: #0a0c10;
+}
+
+div.stream-error {
+    text-align: center;
+}
+

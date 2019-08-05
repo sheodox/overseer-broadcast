@@ -7,7 +7,8 @@ html
         link(href='//fonts.googleapis.com/css?family=Roboto', rel="stylesheet")
         link(href='//fonts.googleapis.com/css?family=Ceviche+One', rel="stylesheet")
         link(href='style.css', rel="stylesheet")
+        script(src="ui.js")
     body
         h1= title
         for stream in streams
-            img(src=`broadcaster/${stream}/stream.mjpg`)
+            img(class="stream", src=`broadcaster/${stream}/stream.mjpg`, onerror="streamError(this)")

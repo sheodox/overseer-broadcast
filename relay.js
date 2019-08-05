@@ -3,13 +3,20 @@ const router = require('express').Router({strict: true}),
     broadcasters = require('./config.json').broadcasters || [];
 
 router.get('/', async (req, res) => {
-    res.render('index', {title: 'Cameras', streams: broadcasters.map((broadcaster, index) => index)})
+    res.render('index', {title: 'Overseer Broadcast', streams: broadcasters.map((broadcaster, index) => index)})
 });
 
 broadcasters.forEach(({ip}, index) => {
     router.use(`/broadcaster/${index}/`, async (req, res, next) => {
-        console.log(`http://${ip}:8000/${req.path}`);
-        req.pipe(request.get(`http://${ip}:8000${req.path}`)).pipe(res);
+        const url = `http://${ip}:8000${req.path}`,
+            r = request
+                .get(url)
+                .on('error', function() {
+                    console.log(`error connecting to ${url}`);
+                    res.status(500);
+                    res.send('remote host not reachable');
+                });
+        req.pipe(r).pipe(res);
     })
 });
 
