@@ -10,6 +10,9 @@ html
         script(src="ui.js")
     body
         h1= title
+        div#inactive-prompt.hidden
+            p Are you still watching?
+            button#confirm-active Yes
         for stream in streams
             video(class="stream", autoplay)
                 source(src=`broadcaster/${stream}/stream.mp4`, type='video/mp4', onerror="streamError(this)")
