@@ -8,7 +8,10 @@ router.get('/', async (req, res) => {
 
 broadcasters.forEach(({ip}, index) => {
     router.use(`/broadcaster/${index}/`, async (req, res, next) => {
-        const url = `http://${ip}:8000${req.path}`,
+        res.header('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.header('Pragma', 'no-cache');
+        res.header('Expires', '0');
+        const url = `http://${ip}/stream.mp4`,
             r = request
                 .get(url)
                 .on('error', function() {

@@ -6,7 +6,7 @@ body {
 h1 {
     text-align: center;
 }
-img, div.stream-error {
+img, div.stream-error, video {
     max-width: 95vw;
     /* maintain aspect ratio */
     max-height: 53.4375vw;
@@ -19,3 +19,6 @@ div.stream-error {
     text-align: center;
 }
 
+video {
+    border: 1px solid white;
+}

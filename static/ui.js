@@ -1,7 +1,11 @@
-function streamError(img) {
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'stream-error';
-    errorDiv.textContent = `Error connecting to stream ${img.src}`;
-    img.replaceWith(errorDiv);
+function touchSources() {
+    document.querySelectorAll('source').forEach(source => {
+        video = source.parentNode;
+        source.src = source.src.replace(/stream.*/, '') +`stream-${Date.now()}.mp4`;
+        video.load();
+        video.play();
+    })
 }
 
+setInterval(touchSources, 5000);
+touchSources();
