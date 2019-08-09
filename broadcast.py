@@ -3,11 +3,12 @@ import datetime as dt
 import os
 
 recording_time = 10
-fps = 12
+fps = 10
 quality = 32
 
 camera = picamera.PiCamera(resolution=(1280, 720), framerate=fps)
-stream = picamera.PiCameraCircularIO(camera, seconds=recording_time)
+# buffer more seconds than we actually will save
+stream = picamera.PiCameraCircularIO(camera, seconds=recording_time * 2)
 
 camera.annotate_background = picamera.Color('black')
 camera.annotate_text = dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
