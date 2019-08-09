@@ -30,7 +30,12 @@ video {
 }
 #inactive-prompt {
     text-align: center;
-    padding: 2rem;
+    position: fixed;
+    background: rgba(24, 26, 30, 0.9);
+    height: 100%;
+    width: 100%;
+    top: 0;
+    padding-top: 30%;
 }
 
 button {
