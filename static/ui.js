@@ -1,11 +1,19 @@
-function touchSources() {
-    document.querySelectorAll('source').forEach(source => {
-        video = source.parentNode;
-        source.src = source.src.replace(/stream.*/, '') +`stream-${Date.now()}.mp4`;
-        video.load();
-        video.play();
-    })
+const sources = document.querySelectorAll('source');
+function checkForFinishedVideos() {
+    sources.forEach(source => {
+        const video = source.parentNode;
+        if (video.duration === video.currentTime) {
+            touchSources(source);
+        }
+    });
+    requestAnimationFrame(checkForFinishedVideos);
+}
+function touchSources(source) {
+    const video = source.parentNode;
+    source.src = source.src.replace(/stream.*/, '') + `stream-${Date.now()}.mp4`;
+    video.load();
+    video.play();
 }
 
-setInterval(touchSources, 10000);
-touchSources();
+sources.forEach(touchSources);
+checkForFinishedVideos();
