@@ -1,5 +1,6 @@
 #!/bin/bash
 
+touch video/stream.mp4
 while true
 do
         python3 broadcast.py
