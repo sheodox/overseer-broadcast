@@ -7,5 +7,5 @@ function touchSources() {
     })
 }
 
-setInterval(touchSources, 5000);
+setInterval(touchSources, 10000);
 touchSources();
