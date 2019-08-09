@@ -1,4 +1,5 @@
 let sources;
+//if a video has finished playing, reload with the next video segment
 function checkForFinishedVideos() {
     sources.forEach(source => {
         const video = source.parentNode;
@@ -8,6 +9,7 @@ function checkForFinishedVideos() {
     });
     requestAnimationFrame(checkForFinishedVideos);
 }
+//use a different url each time, save video is served but prevents all caching
 function touchSource(source) {
     const video = source.parentNode;
     source.src = source.src.replace(/stream.*/, '') + `stream-${Date.now()}.mp4`;
@@ -15,6 +17,7 @@ function touchSource(source) {
     video.play();
 }
 
+//if a video doesn't stream, try again
 function streamError(source) {
     console.log(`streaming error on ${source}, retrying...`);
     setTimeout(function() {
