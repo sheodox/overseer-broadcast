@@ -4,7 +4,7 @@
   "description": "View a network of local raspberry pi cameras.",
   "main": "app.js",
   "scripts": {
-    "broadcast": "export NODE_ENV=production && forever start -c ./record.sh",
+    "broadcast": "export NODE_ENV=production && forever start -c /bin/bash record.sh",
     "start": "forever start server.js",
     "stop": "forever stop server.js",
     "dev": "nodemon server.js",
