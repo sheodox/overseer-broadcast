@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "broadcast": "export NODE_ENV=production && forever start -c /bin/bash record.sh",
+    "deploy-broadcast": "forever stopall && npm run broadcast",
     "start": "forever start server.js",
     "stop": "forever stop server.js",
     "dev": "nodemon server.js",
