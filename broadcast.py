@@ -1,6 +1,6 @@
 import picamera
 import datetime as dt
-import os
+import subprocess
 
 recording_time = 10
 fps = 10
@@ -21,9 +21,7 @@ while True:
         camera.annotate_text = dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         camera.wait_recording(0.2)
     stream.copy_to('pivideo.h264', seconds=recording_time)
-    os.system('touch video/stream.mp4')
-    os.system('rm video/stream.mp4')
-    os.system(f'MP4Box -add pivideo.h264:fps={fps} video/stream.mp4')
-    os.system('rm pivideo.h264')
+    
+    subprocess.Popen(['./box.sh', str(fps)])
 
 camera.stop_recording()
