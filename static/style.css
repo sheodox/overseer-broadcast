@@ -25,3 +25,35 @@ div.stream-error {
 video {
     border: 1px solid white;
 }
+.hidden {
+    display: none;
+}
+#inactive-prompt {
+    text-align: center;
+    position: fixed;
+    background: rgba(24, 26, 30, 0.9);
+    height: 100%;
+    width: 100%;
+    top: 0;
+    padding-top: 30%;
+}
+
+button {
+    display: inline-block;
+    color: #3db4f2;
+    background: #343a4a;
+    cursor: pointer;
+    transition: border 0.2s, background 0.2s;
+    padding: 0.3rem 1rem 0.2rem 1rem;
+    border: none;
+    border-radius: 0.1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    height: 3rem;
+    vertical-align: top;
+}
+button:hover {
+    background: #272c38;
+    color: #d81b60;
+}

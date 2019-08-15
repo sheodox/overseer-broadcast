@@ -4,12 +4,16 @@ html
         title= title
         meta(name='viewport',  content='width=device-width, initial-scale=1')
         meta(name='theme-color', content='#24252b')
+        link(href='logo.png', rel='icon')
         link(href='//fonts.googleapis.com/css?family=Roboto', rel="stylesheet")
         link(href='//fonts.googleapis.com/css?family=Ceviche+One', rel="stylesheet")
         link(href='style.css', rel="stylesheet")
         script(src="ui.js")
     body
         h1= title
+        div#inactive-prompt.hidden
+            p Are you still watching?
+            button#confirm-active Yes
         for stream in streams
             video(class="stream", autoplay)
                 source(src=`broadcaster/${stream}/stream.mp4`, type='video/mp4', onerror="streamError(this)")
