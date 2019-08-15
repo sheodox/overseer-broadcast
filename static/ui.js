@@ -1,21 +1,8 @@
 const activeMaxTime = 1000 * 60 * 10;
-let sources, inactivePrompt,
+let inactivePrompt, streamers,
+    videos = [],
+    active = true,
     activeEndTime = Date.now() + activeMaxTime;
-//if a video has finished playing, reload with the next video segment
-function checkForFinishedVideos() {
-    //stop checking if they're inactive, to save bandwidth
-    if (activeEndTime < Date.now()) {
-        showInactivePrompt();
-        return;
-    }
-    sources.forEach(source => {
-        const video = source.parentNode;
-        if (video.duration === video.currentTime) {
-            touchSource(source);
-        }
-    });
-    requestAnimationFrame(checkForFinishedVideos);
-}
 
 function showInactivePrompt() {
     inactivePrompt.classList.remove('hidden');
@@ -23,32 +10,68 @@ function showInactivePrompt() {
     function reactivate() {
         activeEndTime = Date.now() + activeMaxTime;
         reactivateButton.removeEventListener('click', reactivate);
-        sources.forEach(touchSource);
-        checkForFinishedVideos();
+        streamers.forEach(streamer => streamer.fetchNextSegment());
         inactivePrompt.classList.add('hidden');
     }
     reactivateButton.addEventListener('click', reactivate);
 }
-//use a different url each time, save video is served but prevents all caching
-function touchSource(source) {
-    const video = source.parentNode;
-    source.src = source.src.replace(/stream.*/, '') + `stream-${Date.now()}.mp4`;
-    video.load();
-    video.play();
-}
 
-//if a video doesn't stream, try again
-function streamError(source) {
-    console.log(`streaming error on ${source}, retrying...`);
-    setTimeout(function() {
-        touchSource(source);
-    }, 500);
+class VideoStreamer {
+    constructor(videoElement) {
+        this.video = videoElement;
+        this.videoId = this.video.getAttribute('data-stream-id');
+        this.ms = new MediaSource();
+        this.video.src = URL.createObjectURL(this.ms);
+        this.ms.addEventListener('sourceopen', this.sourceOpen.bind(this));
+        this.video.play();
+        this.lastBuffer = new Uint8Array([]);
+        this.fetchNextSegment();
+    }
+    sourceOpen() {
+        this.buffer = this.ms.addSourceBuffer('video/mp4; codecs="avc1.640028"');
+        this.ms.duration = 0;
+    }
+    fetchNextSegment() {
+        //check activity
+        if (activeEndTime < Date.now()) {
+            active = false;
+            return showInactivePrompt();
+        }
+        
+        fetchArrayBuffer(`/broadcaster/${this.videoId}/stream`)
+            .then(buffer => {
+                const newBuffer = new Uint8Array(buffer),
+                    isDifferent = newBuffer.length !== this.lastBuffer.length || newBuffer.some((num, i) => num !== this.lastBuffer[i]);
+                
+                if (isDifferent) {
+                    this.buffer.timestampOffset = this.ms.duration;
+                    this.buffer.appendBuffer(newBuffer);
+                    this.lastBuffer = newBuffer;
+                }
+                
+                //queue up next response
+                this.fetchNextSegment();
+            })
+    }
+}
+function fetchArrayBuffer(url) {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('get', url);
+        xhr.responseType = 'arraybuffer';
+        xhr.onload = function() {
+            if (xhr.status !== 200) {
+                return reject();
+            }
+            resolve(xhr.response);
+        };
+        xhr.send();
+    })
 }
 
 window.addEventListener('load', function() {
     inactivePrompt = document.getElementById('inactive-prompt');
-    sources = document.querySelectorAll('source');
-    sources.forEach(touchSource);
-    checkForFinishedVideos();
+    videos = [].slice.call(document.querySelectorAll('video'));
+    streamers = videos.map(video => new VideoStreamer(video));
 });
 
