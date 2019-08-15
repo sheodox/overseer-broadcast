@@ -38,7 +38,7 @@ class VideoStreamer {
             return showInactivePrompt();
         }
         
-        fetchArrayBuffer(`/broadcaster/${this.videoId}/stream`)
+        fetchArrayBuffer(`broadcaster/${this.videoId}/stream`)
             .then(buffer => {
                 const newBuffer = new Uint8Array(buffer),
                     isDifferent = newBuffer.length !== this.lastBuffer.length || newBuffer.some((num, i) => num !== this.lastBuffer[i]);
