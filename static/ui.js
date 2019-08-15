@@ -5,15 +5,20 @@ let inactivePrompt, streamers,
     activeEndTime = Date.now() + activeMaxTime;
 
 function showInactivePrompt() {
-    inactivePrompt.classList.remove('hidden');
-    const reactivateButton = document.getElementById('confirm-active');
-    function reactivate() {
-        activeEndTime = Date.now() + activeMaxTime;
-        reactivateButton.removeEventListener('click', reactivate);
-        streamers.forEach(streamer => streamer.fetchNextSegment());
-        inactivePrompt.classList.add('hidden');
+    //prevent double activating the inactive prompt and duplicating subsequent stream activations
+    if (inactivePrompt.classList.contains('hidden')) {
+        inactivePrompt.classList.remove('hidden');
+        const reactivateButton = document.getElementById('confirm-active');
+
+        function reactivate() {
+            activeEndTime = Date.now() + activeMaxTime;
+            reactivateButton.removeEventListener('click', reactivate);
+            streamers.forEach(streamer => streamer.fetchNextSegment());
+            inactivePrompt.classList.add('hidden');
+        }
+
+        reactivateButton.addEventListener('click', reactivate);
     }
-    reactivateButton.addEventListener('click', reactivate);
 }
 
 class VideoStreamer {
