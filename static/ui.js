@@ -30,6 +30,7 @@ class VideoStreamer {
         this.ms.addEventListener('sourceopen', this.sourceOpen.bind(this));
         this.video.play();
         this.lastBuffer = new Uint8Array([]);
+        this.segmentNumber = 0;
         this.fetchNextSegment();
     }
     sourceOpen() {
@@ -43,7 +44,7 @@ class VideoStreamer {
             return showInactivePrompt();
         }
         
-        fetchArrayBuffer(`broadcaster/${this.videoId}/stream`)
+        fetchArrayBuffer(`broadcaster/${this.videoId}/stream/segment/${this.segmentNumber++}`)
             .then(buffer => {
                 const newBuffer = new Uint8Array(buffer),
                     isDifferent = newBuffer.length !== this.lastBuffer.length || newBuffer.some((num, i) => num !== this.lastBuffer[i]);
