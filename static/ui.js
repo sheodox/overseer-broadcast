@@ -5,15 +5,20 @@ let inactivePrompt, streamers,
     activeEndTime = Date.now() + activeMaxTime;
 
 function showInactivePrompt() {
-    inactivePrompt.classList.remove('hidden');
-    const reactivateButton = document.getElementById('confirm-active');
-    function reactivate() {
-        activeEndTime = Date.now() + activeMaxTime;
-        reactivateButton.removeEventListener('click', reactivate);
-        streamers.forEach(streamer => streamer.fetchNextSegment());
-        inactivePrompt.classList.add('hidden');
+    //prevent double activating the inactive prompt and duplicating subsequent stream activations
+    if (inactivePrompt.classList.contains('hidden')) {
+        inactivePrompt.classList.remove('hidden');
+        const reactivateButton = document.getElementById('confirm-active');
+
+        function reactivate() {
+            activeEndTime = Date.now() + activeMaxTime;
+            reactivateButton.removeEventListener('click', reactivate);
+            streamers.forEach(streamer => streamer.fetchNextSegment());
+            inactivePrompt.classList.add('hidden');
+        }
+
+        reactivateButton.addEventListener('click', reactivate);
     }
-    reactivateButton.addEventListener('click', reactivate);
 }
 
 class VideoStreamer {
@@ -38,7 +43,7 @@ class VideoStreamer {
             return showInactivePrompt();
         }
         
-        fetchArrayBuffer(`/broadcaster/${this.videoId}/stream`)
+        fetchArrayBuffer(`broadcaster/${this.videoId}/stream`)
             .then(buffer => {
                 const newBuffer = new Uint8Array(buffer),
                     isDifferent = newBuffer.length !== this.lastBuffer.length || newBuffer.some((num, i) => num !== this.lastBuffer[i]);
