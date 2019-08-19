@@ -9,7 +9,7 @@ h1 {
     text-shadow: 0.2rem -0.2rem 0 #8e24aa, 0 0 0.1rem black;
     font-size: 3rem;
 }
-img, div.stream-error, video {
+div.stream-error, video {
     max-width: 95vw;
     /* maintain aspect ratio */
     max-height: 53.4375vw;
@@ -24,6 +24,7 @@ div.stream-error {
 
 video {
     border: 1px solid white;
+    margin: 0 auto;
 }
 .hidden {
     display: none;
@@ -56,4 +57,15 @@ button {
 button:hover {
     background: #272c38;
     color: #d81b60;
+}
+header {
+    margin: 0 auto;
+    text-align: center;
+}
+header img.logo {
+    width: 4rem;
+}
+header img.logo, header h1 {
+    display: inline-block;
+    vertical-align: middle;
 }

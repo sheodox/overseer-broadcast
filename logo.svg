@@ -17,17 +17,17 @@
    version="1.1"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
    sodipodi:docname="logo.svg"
-   enable-background="new"
    inkscape:export-filename="/home/sheodox/code/js/overseer-cameras/static/logo.png"
    inkscape:export-xdpi="480"
-   inkscape:export-ydpi="480">
+   inkscape:export-ydpi="480"
+   enable-background="new">
   <defs
      id="defs4">
     <linearGradient
        inkscape:collect="always"
        id="linearGradient987">
       <stop
-         style="stop-color:#ffffff;stop-opacity:1;"
+         style="stop-color:#00a8ff;stop-opacity:1"
          offset="0"
          id="stop983" />
       <stop
@@ -51,11 +51,11 @@
        inkscape:collect="always"
        id="linearGradient4719">
       <stop
-         style="stop-color:#00bcd4;stop-opacity:1"
+         style="stop-color:#f13cd4;stop-opacity:1"
          offset="0"
          id="stop4715" />
       <stop
-         style="stop-color:#0994cb;stop-opacity:1"
+         style="stop-color:#09da89;stop-opacity:1"
          offset="1"
          id="stop4717" />
     </linearGradient>
@@ -75,8 +75,8 @@
        id="linearGradient4721"
        x1="1.77277"
        y1="2.0258446"
-       x2="65.587402"
-       y2="67.096931"
+       x2="84.35791"
+       y2="87.223083"
        gradientUnits="userSpaceOnUse" />
     <linearGradient
        inkscape:collect="always"
@@ -106,10 +106,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="9.5895125"
-     inkscape:cx="30.959866"
-     inkscape:cy="43.177567"
+     inkscape:cx="36.643158"
+     inkscape:cy="44.736692"
      inkscape:document-units="px"
-     inkscape:current-layer="layer4"
+     inkscape:current-layer="layer3"
      showgrid="false"
      units="px"
      inkscape:window-width="2560"
@@ -125,7 +125,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>

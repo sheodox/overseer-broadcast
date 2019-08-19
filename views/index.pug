@@ -10,7 +10,9 @@ html
         link(href='style.css', rel="stylesheet")
         script(src="ui.js")
     body
-        h1= title
+        header
+            img.logo(src='logo.png')
+            h1= title
         div#inactive-prompt.hidden
             p Are you still watching?
             button#confirm-active Yes
