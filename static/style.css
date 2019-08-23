@@ -28,6 +28,8 @@ video {
 }
 .stream-container {
     position: relative;
+    width: min-content;
+    transform: translateX(25%);
 }
 .stream-container .stats {
     position: absolute;
