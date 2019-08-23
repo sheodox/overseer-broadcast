@@ -17,4 +17,6 @@ html
             p Are you still watching?
             button#confirm-active Yes
         for stream in streams
-            video(class="stream", controls, autoplay, data-stream-id=stream)
+            div.stream-container
+                video(class="stream", controls, autoplay, data-stream-id=stream)
+                span(class="stats")

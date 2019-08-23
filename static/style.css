@@ -26,6 +26,16 @@ video {
     border: 1px solid white;
     margin: 0 auto;
 }
+.stream-container {
+    position: relative;
+}
+.stream-container .stats {
+    position: absolute;
+    left: 0;
+    padding: 10px;
+    white-space: pre;
+    font-size: 1vh;
+}
 .hidden {
     display: none;
 }
