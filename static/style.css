@@ -29,14 +29,14 @@ video {
 .stream-container {
     position: relative;
     width: min-content;
-    transform: translateX(25%);
 }
 .stream-container .stats {
     position: absolute;
     left: 0;
-    padding: 10px;
+    padding: 2px;
     white-space: pre;
     font-size: 1vh;
+    background: rgba(0, 0, 0, 0.7);
 }
 .hidden {
     display: none;
