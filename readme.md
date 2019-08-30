@@ -51,7 +51,7 @@ On each broadcaster run `npm run broadcast`
 
 Go to http://[overseer-host-or-ip]:3200/ in your web browser.
 
-#Future
+# Future
 
 Currently you can only view the camera streams live, eventually I'd like to add occasional snapshots, a day of recorded video to be able to seek through and download, and possibly motion detection.
 
