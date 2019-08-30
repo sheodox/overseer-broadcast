@@ -28,13 +28,15 @@ video {
 }
 .stream-container {
     position: relative;
+    width: min-content;
 }
 .stream-container .stats {
     position: absolute;
     left: 0;
-    padding: 10px;
+    padding: 2px;
     white-space: pre;
     font-size: 1vh;
+    background: rgba(0, 0, 0, 0.7);
 }
 .hidden {
     display: none;
@@ -47,6 +49,7 @@ video {
     width: 100%;
     top: 0;
     padding-top: 30%;
+    z-index: 99999;
 }
 
 button {
