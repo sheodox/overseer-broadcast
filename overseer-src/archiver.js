@@ -30,10 +30,10 @@ class StreamArchiver {
         d.setHours(6);
         d.setMinutes(0);
         d.setSeconds(0);
+        this.log(`scheduling delete check for ${d.toLocaleDateString()} ${d.toLocaleTimeString()}`);
         setTimeout(
             this.deleteStaleRecordings.bind(this),
            d.getTime() - Date.now());
-        console.log(d.getTime() - Date.now())
     }
     mkdir(dirPath) {
         try {
@@ -109,7 +109,7 @@ class StreamArchiver {
             d.setHours(0);
             d.setMinutes(0);
             if (Date.now() - d.getTime() > this.archiveKeepMaxMS) {
-                console.log(`${archive} - is beyond the keep limit, deleting`);
+                this.log(`${archive} - is beyond the keep limit, deleting`);
                 fs.unlink(path.join('./video', archive), err => {
                     if (err) throw err;
                 })
