@@ -5,6 +5,9 @@ const config = require('./config'),
 
 class StreamArchiver {
     constructor(ip, camName) {
+        if (camName === undefined) {
+            throw new Error(`must define a camera 'name' for ${ip}`);
+        }
         this.ip = ip;
         this.camName = camName;
         this.streamSegmentMax = 20;
