@@ -5,7 +5,7 @@ import subprocess
 import json
 
 try:
-    file = open('config.json')
+    file = open('../config.json')
     config = json.load(file)
     file.close()
 except FileNotFoundError:
