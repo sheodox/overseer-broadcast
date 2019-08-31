@@ -1,5 +1,5 @@
 {
-  "name": "overseer-cameras",
+  "name": "overseer-broadcast",
   "version": "0.0.0",
   "description": "View a network of local raspberry pi cameras.",
   "main": "app.js",
