@@ -4,11 +4,11 @@
   "description": "View a network of local raspberry pi cameras.",
   "main": "app.js",
   "scripts": {
-    "broadcast": "export NODE_ENV=production && forever start -c /bin/bash record.sh",
+    "broadcast": "export NODE_ENV=production && forever start -c /bin/bash broadcaster-src/record.sh",
     "deploy-broadcast": "forever stopall && git pull && npm run broadcast",
-    "start": "forever start server.js",
-    "stop": "forever stop server.js",
-    "dev": "nodemon server.js",
+    "start": "forever start overseer-src/server.js",
+    "stop": "forever stop overseer-src/server.js",
+    "dev": "nodemon overseer-src/server.js",
     "deploy": "npm stop && git pull && npm start"
   },
   "author": "sheodox",

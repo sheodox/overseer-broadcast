@@ -1,9 +1,11 @@
 const router = require('express').Router({strict: true}),
     request = require('request'),
-    broadcasters = require('./config.json').broadcasters || [];
+    archiver = require('./archiver'),
+    config = require('./config'),
+    broadcasters = config.getBroadcasters();
 
-//an array (indices are 
-// ) of arrays of requests
+//keys on this object are broadcaster IPs, each holding an array of express
+//response objects waiting for an update from a camera at that IP
 let awaitingResponse = {};
 for (let i = 0; i < broadcasters.length; i++) {
     awaitingResponse[broadcasters[i].ip] = ([]);
@@ -32,6 +34,7 @@ router.get('/update', async (req, res) => {
     const ip = req.ip.replace('::ffff:', '');
     console.log(`update from ${ip}`);
     res.send('thanks camera');
+    archiver[ip].nextSegment();
     
     awaitingResponse[ip].forEach(res => {
         sendStreamSegment(res, ip);
