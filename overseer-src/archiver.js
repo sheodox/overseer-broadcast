@@ -1,5 +1,8 @@
 const config = require('./config'),
+    util = require('util'),
+    path = require('path'),
     fs = require('fs'),
+    readdir = util.promisify(fs.readdir),
     child_process = require('child_process'),
     request = require('request');
 
@@ -12,7 +15,13 @@ class StreamArchiver {
         this.camName = camName;
         this.streamSegmentMax = 20;
         this.streamSegmentCurrent = 0;
-        this.mkdir(`./video/segments-${this.camName}`)
+        const archiveSettings = config.getArchiveSettings();
+        if (!archiveSettings || !archiveSettings.daysToKeep) {
+            throw new Error(`must specify 'daysToKeep'`);
+        }
+        this.archiveKeepMaxMS = config.getArchiveSettings().daysToKeep * 24 * 60 * 60 * 1000;
+        this.mkdir(`./video/segments-${this.camName}`);
+        this.deleteStaleRecordings();
     }
     mkdir(dirPath) {
         try {
@@ -69,6 +78,31 @@ class StreamArchiver {
             }
         });
         r.pipe(writeStream);
+    }
+    async deleteStaleRecordings() {
+        const archives = (await readdir('./video'))
+            .filter(p => {
+                return path.basename(p).indexOf(`archive-${this.camName}`) === 0;
+            });
+        
+        archives.forEach(archive => {
+            const d = new Date(),
+                [year, month, day] = archive
+                    .replace(`archive-${this.camName}-`, '')
+                    .split('-');
+            d.setFullYear(year);
+            d.setMonth(month - 1);
+            d.setDate(day);
+            //set it to the beginning of the day for time comparisons
+            d.setHours(0);
+            d.setMinutes(0);
+            if (Date.now() - d.getTime() > this.archiveKeepMaxMS) {
+                console.log(`${archive} - is beyond the keep limit, deleting`);
+                fs.unlink(path.join('./video', archive), err => {
+                    if (err) throw err;
+                })
+            }
+        });
     }
 }
 
