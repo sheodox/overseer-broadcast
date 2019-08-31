@@ -1,3 +1,3 @@
 #!/bin/bash
-cd broadcast-src
+cd broadcaster-src
 python3 broadcast.py
