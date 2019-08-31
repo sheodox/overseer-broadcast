@@ -6,6 +6,7 @@ const config = require('./config'),
     child_process = require('child_process'),
     request = require('request');
 
+const DAY_MS = 24 * 60 * 60 * 1000;
 class StreamArchiver {
     constructor(ip, camName) {
         if (camName === undefined) {
@@ -19,9 +20,20 @@ class StreamArchiver {
         if (!archiveSettings || !archiveSettings.daysToKeep) {
             throw new Error(`must specify 'daysToKeep'`);
         }
-        this.archiveKeepMaxMS = config.getArchiveSettings().daysToKeep * 24 * 60 * 60 * 1000;
+        this.archiveKeepMaxMS = config.getArchiveSettings().daysToKeep * DAY_MS;
         this.mkdir(`./video/segments-${this.camName}`);
         this.deleteStaleRecordings();
+    }
+    scheduleDeleteCheck() {
+        //figure out how long until tomorrow at 6AM.
+        const d = new Date(Date.now() + DAY_MS);
+        d.setHours(6);
+        d.setMinutes(0);
+        d.setSeconds(0);
+        setTimeout(
+            this.deleteStaleRecordings.bind(this),
+           d.getTime() - Date.now());
+        console.log(d.getTime() - Date.now())
     }
     mkdir(dirPath) {
         try {
@@ -103,6 +115,8 @@ class StreamArchiver {
                 })
             }
         });
+        
+        this.scheduleDeleteCheck();
     }
 }
 
