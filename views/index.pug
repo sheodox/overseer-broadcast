@@ -8,15 +8,9 @@ html
         link(href='//fonts.googleapis.com/css?family=Roboto', rel="stylesheet")
         link(href='//fonts.googleapis.com/css?family=Ceviche+One', rel="stylesheet")
         link(href='style.css', rel="stylesheet")
-        script(src="ui.js")
+        script(src="dist/ui.js")
     body
         header
             img.logo(src='logo.png')
             h1= title
-        div#inactive-prompt.hidden
-            p Are you still watching?
-            button#confirm-active Yes
-        for stream in streams
-            div.stream-container
-                video(class="stream", controls, autoplay, data-stream-id=stream)
-                span(class="stats")
+        div#react-root

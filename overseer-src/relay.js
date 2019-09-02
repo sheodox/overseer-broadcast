@@ -1,5 +1,10 @@
 const router = require('express').Router({strict: true}),
     request = require('request'),
+    path = require('path'),
+    util = require('util'),
+    fs = require('fs'),
+    readdir = util.promisify(fs.readdir),
+    stat = util.promisify(fs.stat),
     archiver = require('./archiver'),
     config = require('./config'),
     broadcasters = config.getBroadcasters();
@@ -11,9 +16,39 @@ for (let i = 0; i < broadcasters.length; i++) {
     awaitingResponse[broadcasters[i].ip] = ([]);
 }
 
-router.get('/', async (req, res) => {
+async function entry(req, res) {
     res.render('index', {title: 'Overseer Broadcast', streams: broadcasters.map((broadcaster, index) => index)})
+}
+router.get('/', entry);
+
+router.get('/info/broadcasts', (req, res) => {
+    res.json(
+        broadcasters.map((b, index) => {return {name: b.name, stream: index}})
+    );
 });
+
+router.get('/info/archives', async (req, res) => {
+    const archiveDir = './video/archives',
+        files = await readdir(archiveDir),
+        list = [];
+    let size = 0;
+    for (let i = 0; i < files.length; i++) {
+        const s = (await stat(path.join(archiveDir, files[i]))).size;
+        size += s;
+        list.push({
+            file: files[i],
+            size: s
+        });
+    }
+    
+    res.json({list, size})
+});
+router.get('/archive/:file', (req, res) => {
+    fs
+        .createReadStream(`./video/archives/${req.params.file}`)
+        .pipe(res);
+});
+
 
 function sendStreamSegment(res, ip) {
     res.header('Cache-Control', 'no-cache, no-store, must-revalidate');

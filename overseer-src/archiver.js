@@ -22,6 +22,7 @@ class StreamArchiver {
         }
         this.archiveKeepMaxMS = config.getArchiveSettings().daysToKeep * DAY_MS;
         this.mkdir(`./video/segments-${this.camName}`);
+        this.mkdir('./video/archives');
         this.deleteStaleRecordings();
     }
     scheduleDeleteCheck() {
@@ -51,7 +52,7 @@ class StreamArchiver {
             hour = d.getHours();
         let hourStr = hour > 13 ? hour - 12 : hour;
         hourStr += hour >= 12 ? 'pm' : 'am';
-        return `./video/archive-${this.camName}-${dateStr}-${hourStr}.mp4`
+        return `./video/archives/${this.camName}-${dateStr}-${hourStr}.mp4`
     }
     log(msg) {
         console.log(`[archiver - ${this.camName}] - ${msg}`);
@@ -92,10 +93,7 @@ class StreamArchiver {
         r.pipe(writeStream);
     }
     async deleteStaleRecordings() {
-        const archives = (await readdir('./video'))
-            .filter(p => {
-                return path.basename(p).indexOf(`archive-${this.camName}`) === 0;
-            });
+        const archives = (await readdir('./video/archives'));
         
         archives.forEach(archive => {
             const d = new Date(),

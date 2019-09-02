@@ -9,12 +9,25 @@
     "start": "forever start overseer-src/server.js",
     "stop": "forever stop overseer-src/server.js",
     "dev": "nodemon overseer-src/server.js",
-    "deploy": "npm stop && git pull && npm start"
+    "deploy": "npm stop && git pull && npm run build && npm start",
+    "build": "webpack --mode production",
+    "build-dev": "webpack --mode development"
   },
   "author": "sheodox",
   "dependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "babel-cli": "^6.26.0",
+    "babel-loader": "^8.0.6",
     "express": "^4.17.1",
     "pug": "^2.0.4",
-    "request": "^2.88.0"
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-router-dom": "^5.0.1",
+    "request": "^2.88.0",
+    "webpack": "^4.39.3"
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.3.7"
   }
 }
