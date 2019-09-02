@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    watch: true,
+    watch: process.argv.includes('development'),
     entry: './static/src/ui.js',
     output: {
         path: path.resolve(__dirname, 'static/dist'),
