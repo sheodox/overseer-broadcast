@@ -1,0 +1,35 @@
+video {
+  max-width: 95vw;
+  /* maintain aspect ratio */
+  max-height: 53.4375vw;
+  width: 1280px;
+  height: 720px;
+  background: #0a0c10;
+}
+
+video {
+  border: 1px solid white;
+  margin: 0 auto;
+}
+.stream-container {
+  position: relative;
+  width: min-content;
+}
+.stream-container .stats {
+  position: absolute;
+  left: 0;
+  padding: 2px;
+  white-space: pre;
+  font-size: 1vh;
+  background: rgba(0, 0, 0, 0.7);
+}
+#inactive-prompt {
+  text-align: center;
+  position: fixed;
+  background: rgba(24, 26, 30, 0.9);
+  height: 100%;
+  width: 100%;
+  top: 0;
+  padding-top: 30%;
+  z-index: 99999;
+}

@@ -1,0 +1,55 @@
+@import 'colors';
+
+header {
+  width: 100vw;
+  border-bottom: 3px solid $pink;
+  text-align: center;
+  margin-bottom: 1rem;
+  h1 {
+    text-align: center;
+    font-family: 'Ceviche One', sans-serif;
+    text-shadow: 0.2rem -0.2rem 0 $pink, 0 0 0.1rem black;
+    font-size: 3rem;
+  }
+}
+header img.logo {
+  width: 4rem;
+}
+header img.logo, header h1 {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+nav {
+  display: inline-block;
+  ul {
+    text-align: center;
+  }
+
+  li {
+    list-style: none;
+    display: inline-block;
+    margin: 1rem;
+
+    a {
+      display: inline-block;
+      color: #3db4f2;
+      background: #343a4a;
+      cursor: pointer;
+      transition: border 0.2s, background 0.2s;
+      padding: 0.3rem 1rem 0.2rem 1rem;
+      border: none;
+      border-radius: 0.1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      text-decoration: none;
+      
+      &:hover {
+        background: #272c38;
+        color: $pink;
+      }
+    }
+  }
+
+}

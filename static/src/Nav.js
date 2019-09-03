@@ -15,11 +15,15 @@ class Nav extends React.Component {
     }
     render() {
         const list = this.list.map(this.createLink.bind(this));
-        return <nav>
-            <ul>
-                {list}
-            </ul>
-        </nav>
+        return <header>
+            <img className="logo" src="logo.png" />
+            <h1>{document.title}</h1>
+            <nav>
+                <ul>
+                    {list}
+                </ul>
+            </nav>
+        </header>
     }
 }
 

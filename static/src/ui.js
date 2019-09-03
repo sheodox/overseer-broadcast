@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+import style from './style/style.scss'
 
 window.req = (url) => fetch(url).then(res => res.json());
 window.getPrettyBytes = (bytes) => {
