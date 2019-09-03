@@ -15,7 +15,7 @@ class Archive extends React.Component {
     createList() {
         return this.state.list.map((archive) => {
             return <tr key={archive.file}>
-                <td><a href={'/archive/' + archive.file}>{archive.file}</a></td>
+                <td><a href={'archive/' + archive.file}>{archive.file}</a></td>
                 <td>{getPrettyBytes(archive.size)}</td>
             </tr>
         })
