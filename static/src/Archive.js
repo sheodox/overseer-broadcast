@@ -1,41 +1,150 @@
 import React from 'react';
+import If from './If';
 
 class Archive extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            list: [],
-            size: 0
+            lists: [],
+            totalArchives: 0,
+            size: 0,
+            recordedDates: []
         }
     }
     async componentDidMount() {
-        const info = await req('info/archives');
-        this.setState(info);
+        const info = await req('info/archives'),
+            broadcasters = await req('info/broadcasts');
+        this.setState(Object.assign({
+            totalArchives: info.list.length,
+            size: info.size
+        }, this.sortArchives(info.list, broadcasters.map(b => b.name))));
     }
-    createList() {
-        return this.state.list.map((archive) => {
-            return <tr key={archive.file}>
-                <td><a href={'archive/' + archive.file}>{archive.file}</a></td>
-                <td>{getPrettyBytes(archive.size)}</td>
-            </tr>
+    sortArchives(list, broadcasterNames) {
+        const sortedLists = [],
+            recordedDates = new Set();
+        broadcasterNames.forEach(broadcaster => {
+            const archives = list
+                //get only this broadcaster's archives
+                .filter(archive => archive.file.indexOf(broadcaster) === 0)
+                //parse a date object out of the file name
+                .reduce((archivesByDay, archive) => {
+                    let [year, month, date, hour] = archive.file
+                        .replace(broadcaster + '-', '')
+                        .replace(/\.mp4$/, '')
+                        .split('-');
+                    const isPM = hour.includes('pm');
+                    hour = parseInt(hour.replace(/[ap]m/, ''), 10);
+                    if (isPM && hour < 12) {
+                        hour += 12;
+                    }
+                    archive.date = new Date(year, month - 1, date, hour);
+                    
+                    const dateStr = `${year}-${month}-${date}`;
+                    if (!archivesByDay[dateStr]) {
+                        archivesByDay[dateStr] = {
+                            archives: [archive],
+                            day: new Date(year, month - 1, date)
+                        };
+                    }
+                    else {
+                        archivesByDay[dateStr].archives.push(archive);
+                    }
+                    
+                    recordedDates.add(dateStr);
+                    return archivesByDay;
+                }, {});
+            //make sure everything is sorted properly within that date
+            recordedDates.forEach(date => {
+                if (archives[date]) {
+                    archives[date].archives = archives[date].archives.sort((a, b) => a.date.getTime() - b.date.getTime());
+                }
+            });
+            sortedLists.push({
+                broadcaster,
+                dates: archives
         })
+        });
+        return {recordedDates: Array.from(recordedDates), lists: sortedLists};
     }
     render() {
-        return <section>
-            <p>{this.state.list.length} files, {getPrettyBytes(this.state.size)} total</p>
-            <table id='archive-list'>
-                <thead>
-                    <tr>
-                        <th>File</th>
-                        <th>Size</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {this.createList()}
-                </tbody>
-            </table>
+        if (!this.state.lists.length) {
+            //todo loading indicator?
+            return null;
+        }
+        return <section id="archive">
+            <p>total size {getPrettyBytes(this.state.size)} in {this.state.totalArchives} archives</p>
+            <ArchiveViewer recordedDates={this.state.recordedDates} archives={this.state.lists}/>
         </section>
     }
+}
+
+class ArchiveViewer extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedArchive: {},
+            selectedDate: this.props.recordedDates[this.props.recordedDates.length - 1]
+        };
+    }
+    selectDay(dateStr) {
+        this.setState({
+            selectedDate: dateStr
+        })
+    }    
+    view(archive) {
+        this.setState({
+            selectedArchive: archive
+        });
+    }
+    render() {
+        const dateSelector = this.props.recordedDates.map((dateStr) => {
+            return <button onClick={this.selectDay.bind(this, dateStr)} key={dateStr} disabled={dateStr === this.state.selectedDate}>{dateStr}</button>
+        });
+        
+        const recordingLists = this.props.archives.map(list => {
+            const dayList = list.dates[this.state.selectedDate];
+            if (!dayList) {
+                return null;
+            }
+            const totalSize = dayList.archives.reduce((sum, {size}) => {return sum + size}, 0);
+            return <div key={list.broadcaster} className="archive-list">
+                <h2>{list.broadcaster}</h2>
+                <p>{getPrettyBytes(totalSize)} total</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Archive</th>
+                            <th>Size</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {dayList.archives.map((archive) => {
+                            return <tr key={archive.file}>
+                                <td><a href='#' onClick={this.view.bind(this, archive)}>{archive.file}</a></td>
+                                <td>{getPrettyBytes(archive.size)}</td>
+                            </tr>;
+                        })}
+                    </tbody>
+                </table>
+            </div>
+        });
+        
+        const videoSrc = 'archive/' + this.state.selectedArchive.file;
+        return <section>
+            <If renderWhen={!!this.state.selectedArchive.file}>
+                <video controls src={videoSrc} />
+                <h2>{this.state.selectedArchive.file}</h2>
+                <a download href={videoSrc}>download ({getPrettyBytes(this.state.selectedArchive.size)})</a>
+            </If>
+            <div className="date-selector">
+                {dateSelector}
+            </div>
+            <div className="archive-selector">
+                {recordingLists}
+            </div>
+        </section>
+    }
+
 }
 
 export default Archive

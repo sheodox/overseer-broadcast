@@ -29,7 +29,12 @@ button {
   height: 3rem;
   vertical-align: top;
 }
-button:hover {
+button:not(:disabled):hover {
   background: #272c38;
   color: $pink;
+}
+
+button:disabled {
+  cursor: auto;
+  color: #272c38;
 }

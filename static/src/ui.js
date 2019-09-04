@@ -4,7 +4,7 @@ import App from './App';
 import style from './style/style.scss'
 
 window.req = (url) => fetch(url).then(res => res.json());
-window.getPrettyBytes = (bytes) => {
+window.getPrettyBytes = (bytes=0) => {
     let size, unit;
     const kb = 1024,
         mb = 1024 * kb,
