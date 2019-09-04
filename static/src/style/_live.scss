@@ -12,6 +12,10 @@ video {
   margin: 0 auto;
 }
 .stream-container {
+  @media (min-width: 1350px) {
+    width: 1350px;
+    margin: 0 auto;
+  }
   position: relative;
   width: min-content;
 }
