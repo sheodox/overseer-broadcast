@@ -50,7 +50,7 @@ class StreamArchiver {
             pad = num => num < 10 ? '0' + num : num,
             dateStr = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()),
             hour = d.getHours();
-        let hourStr = hour > 13 ? hour - 12 : hour;
+        let hourStr = hour > 12 ? hour - 12 : hour;
         hourStr += hour >= 12 ? 'pm' : 'am';
         return `./video/archives/${this.camName}-${dateStr}-${hourStr}.mp4`
     }
