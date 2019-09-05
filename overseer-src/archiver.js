@@ -108,7 +108,7 @@ class StreamArchiver {
             d.setMinutes(0);
             if (Date.now() - d.getTime() > this.archiveKeepMaxMS) {
                 this.log(`${archive} - is beyond the keep limit, deleting`);
-                fs.unlink(path.join('./video', archive), err => {
+                fs.unlink(path.join('./video/archives', archive), err => {
                     if (err) throw err;
                 })
             }
