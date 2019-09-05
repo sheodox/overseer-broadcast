@@ -4,6 +4,9 @@
 @import 'colors';
 
 
+* {
+  box-sizing: border-box !important;
+}
 body {
   margin: 0;
   background: #1a1e26;

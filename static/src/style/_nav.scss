@@ -1,11 +1,27 @@
 @import 'colors';
 
+@keyframes under-pulse-glow {
+  0% {
+    box-shadow: 0 0.7rem 1.6rem -0.7rem $pink;
+  }
+  50% {
+    box-shadow: 0 0.7rem 1rem -0.7rem $purple;
+  }
+  100% {
+    box-shadow: 0 0.7rem 1.6rem -0.7rem $pink;
+  }
+}
+
 header {
   width: 100vw;
-  border-bottom: 3px solid $pink;
+  border-bottom: 1px solid $pink;
+  box-shadow: 0 0 10px 3px black;
   text-align: center;
   margin-bottom: 1rem;
+  background: #161a20;
+  
   h1 {
+    margin: 0;
     text-align: center;
     font-family: 'Ceviche One', sans-serif;
     text-shadow: 0.2rem -0.2rem 0 $pink, 0 0 0.1rem black;
@@ -13,7 +29,7 @@ header {
   }
 }
 header img.logo {
-  width: 4rem;
+  width: 3rem;
 }
 header img.logo, header h1 {
   display: inline-block;
@@ -30,15 +46,15 @@ nav {
     list-style: none;
     display: inline-block;
     margin: 1rem;
-
+    
     a {
       display: inline-block;
-      color: #3db4f2;
+      color: white;
       background: #343a4a;
+      border: 1px solid black;
       cursor: pointer;
       transition: border 0.2s, background 0.2s;
       padding: 0.3rem 1rem 0.2rem 1rem;
-      border: none;
       border-radius: 0.1rem;
       font-size: 1rem;
       font-weight: 600;
@@ -48,6 +64,7 @@ nav {
       &:hover {
         background: #272c38;
         color: $pink;
+        animation: under-pulse-glow 2s ease-in-out infinite alternate;
       }
     }
   }
