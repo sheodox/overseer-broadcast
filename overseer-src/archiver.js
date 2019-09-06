@@ -100,7 +100,11 @@ class StreamArchiver {
                 const ms = archive.replace(`${this.camName}-`, '')
                         .replace('.mp4', ''),
                     d = new Date();
-                d.setTime(ms);
+                d.setTime(parseInt(ms, 10));
+                //set to the beginning of the day, this deletes a full day at a time because delete checks only run daily
+                d.setHours(0);
+                d.setMinutes(0);
+                d.setMilliseconds(0);
                 
                 if (Date.now() - d.getTime() > this.archiveKeepMaxMS) {
                     this.log(`${archive} - is beyond the keep limit, deleting`);
