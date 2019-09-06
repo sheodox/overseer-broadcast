@@ -16,6 +16,7 @@ class StreamArchiver {
         this.camName = camName;
         this.streamSegmentMax = 20;
         this.streamSegmentCurrent = 0;
+        this.lastSegmentHour = null;
         const archiveSettings = config.getArchiveSettings();
         if (!archiveSettings || !archiveSettings.daysToKeep) {
             throw new Error(`must specify 'daysToKeep'`);
@@ -56,13 +57,12 @@ class StreamArchiver {
     log(msg) {
         console.log(`[archiver - ${this.camName}] - ${msg}`);
     }
-    archiveSegments() {
-        this.log(`max of ${this.streamSegmentMax} segments reached for ${this.camName}, adding all to the archive`);
-        this.streamSegmentCurrent = 0;
+    archiveSegments(archiveReason) {
+        this.log(archiveReason);
         const archive = this.getCurrentArchiveName(),
             start = Date.now();
         const catArgs = [];
-        for (let i = 0; i < this.streamSegmentMax; i++) {
+        for (let i = 0; i < this.streamSegmentCurrent; i++) {
             catArgs.push(`-cat ${this.getSegmentFileName(i)}`);
         }
         child_process
@@ -71,6 +71,7 @@ class StreamArchiver {
                 console.log(stdout);
                 console.log(stderr);
             })
+        this.streamSegmentCurrent = 0;
     }
     getSegmentFileName(segmentNumber) {
         return `./video/segments-${this.camName}/segment-${segmentNumber}.mp4`;
@@ -85,9 +86,16 @@ class StreamArchiver {
                     this.log(`error connecting to ${url}`);
                 });
         writeStream.on('finish', async () => {
-            if (this.streamSegmentCurrent === this.streamSegmentMax) {
-                this.archiveSegments();
+            const hour = new Date().getHours();
+            //if the hour has changed, we need to archive footage now instead of waiting until the end,
+            //otherwise we end up having up to several minutes in the wrong archive
+            if (typeof this.lastSegmentHour === 'number' && this.lastSegmentHour !== hour) {
+                this.archiveSegments(`the hour has changed, archiving all old footage immediately`);
             }
+            if (this.streamSegmentCurrent === this.streamSegmentMax) {
+                this.archiveSegments(`max of ${this.streamSegmentMax} segments reached for ${this.camName}, adding all to the archive`);
+            }
+            this.lastSegmentHour = hour;
         });
         r.pipe(writeStream);
     }
