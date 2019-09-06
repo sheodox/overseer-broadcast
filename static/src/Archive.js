@@ -28,22 +28,18 @@ class Archive extends React.Component {
                 .filter(archive => archive.file.indexOf(broadcaster) === 0)
                 //parse a date object out of the file name
                 .reduce((archivesByDay, archive) => {
-                    let [year, month, date, hour] = archive.file
+                    let ms = archive.file
                         .replace(broadcaster + '-', '')
-                        .replace(/\.mp4$/, '')
-                        .split('-');
-                    const isPM = hour.includes('pm');
-                    hour = parseInt(hour.replace(/[ap]m/, ''), 10);
-                    if (isPM && hour < 12) {
-                        hour += 12;
-                    }
-                    archive.date = new Date(year, month - 1, date, hour);
+                        .replace(/\.mp4$/, '');
+                    const d = new Date();
+                    d.setTime(parseInt(ms, 10));
+                    archive.date = d;
                     
-                    const dateStr = `${year}-${month}-${date}`;
+                    const dateStr = d.toLocaleDateString();
                     if (!archivesByDay[dateStr]) {
                         archivesByDay[dateStr] = {
                             archives: [archive],
-                            day: new Date(year, month - 1, date)
+                            date: d
                         };
                     }
                     else {
@@ -120,7 +116,7 @@ class ArchiveViewer extends React.Component {
                     <tbody>
                         {dayList.archives.map((archive) => {
                             return <tr key={archive.file}>
-                                <td><a href='#' onClick={this.view.bind(this, archive)}>{archive.file}</a></td>
+                                <td><a href='#' onClick={this.view.bind(this, archive)}>{archive.date.toLocaleTimeString()}</a></td>
                                 <td>{getPrettyBytes(archive.size)}</td>
                             </tr>;
                         })}
@@ -133,8 +129,9 @@ class ArchiveViewer extends React.Component {
         return <section>
             <If renderWhen={!!this.state.selectedArchive.file}>
                 <video controls src={videoSrc} />
-                <h2>{this.state.selectedArchive.file}</h2>
-                <a download href={videoSrc}>download ({getPrettyBytes(this.state.selectedArchive.size)})</a>
+                <h2>{(this.state.selectedArchive.date || new Date()).toLocaleString()}</h2>
+                <p>{this.state.selectedArchive.file}</p>
+                <p><a download href={videoSrc}>download ({getPrettyBytes(this.state.selectedArchive.size)})</a></p>
             </If>
             <div className="date-selector">
                 {dateSelector}

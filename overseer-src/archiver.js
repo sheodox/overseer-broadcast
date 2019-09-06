@@ -46,13 +46,12 @@ class StreamArchiver {
         }
     }
     getCurrentArchiveName() {
-        const d = new Date(),
-            pad = num => num < 10 ? '0' + num : num,
-            dateStr = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()),
-            hour = d.getHours();
-        let hourStr = hour > 12 ? hour - 12 : hour;
-        hourStr += hour >= 12 ? 'pm' : 'am';
-        return `./video/archives/${this.camName}-${dateStr}-${hourStr}.mp4`
+        const d = new Date();
+        //get a date based on the current hour
+        d.setMinutes(0);
+        d.setSeconds(0);
+        d.setMilliseconds(0);
+        return `./video/archives/${this.camName}-${d.getTime()}.mp4`
     }
     log(msg) {
         console.log(`[archiver - ${this.camName}] - ${msg}`);
@@ -94,26 +93,23 @@ class StreamArchiver {
     }
     async deleteStaleRecordings() {
         const archives = (await readdir('./video/archives'));
-        
-        archives.forEach(archive => {
-            const d = new Date(),
-                [year, month, day] = archive
-                    .replace(`archive-${this.camName}-`, '')
-                    .split('-');
-            d.setFullYear(year);
-            d.setMonth(month - 1);
-            d.setDate(day);
-            //set it to the beginning of the day for time comparisons
-            d.setHours(0);
-            d.setMinutes(0);
-            if (Date.now() - d.getTime() > this.archiveKeepMaxMS) {
-                this.log(`${archive} - is beyond the keep limit, deleting`);
-                fs.unlink(path.join('./video/archives', archive), err => {
-                    if (err) throw err;
-                })
-            }
-        });
-        
+
+        archives
+            .filter(f => f.indexOf(`${this.camName}-`) === 0)
+            .forEach(archive => {
+                const ms = archive.replace(`${this.camName}-`, '')
+                        .replace('.mp4', ''),
+                    d = new Date();
+                d.setTime(ms);
+                
+                if (Date.now() - d.getTime() > this.archiveKeepMaxMS) {
+                    this.log(`${archive} - is beyond the keep limit, deleting`);
+                    fs.unlink(path.join('./video/archives', archive), err => {
+                        if (err) throw err;
+                    })
+                }
+            });
+
         this.scheduleDeleteCheck();
     }
 }
