@@ -1,0 +1,34 @@
+#archive {
+  margin: 0 1rem;
+  @media (min-width: 1350px) {
+    width: 1350px;
+    margin: 0 auto;
+  }
+  td, th {
+    padding: 0 0.5rem;
+  }
+  a {
+    color: cyan;
+  }
+  
+  .date-selector {
+    margin: 0 auto;
+    width: max-content;
+    max-width: 100%;
+    button {
+      margin-top: 0.5rem;
+    }
+    button:not(:last-of-type) {
+      margin-right: 1rem;
+    }
+  }
+  .archive-selector {
+    margin: 0 auto;
+    width: max-content;
+    max-width: 100%;
+  }
+  .archive-list {
+    display: inline-block;
+    vertical-align: top;
+  }
+}

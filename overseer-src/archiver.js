@@ -1,15 +1,40 @@
 const config = require('./config'),
+    util = require('util'),
+    path = require('path'),
     fs = require('fs'),
+    readdir = util.promisify(fs.readdir),
     child_process = require('child_process'),
     request = require('request');
 
+const DAY_MS = 24 * 60 * 60 * 1000;
 class StreamArchiver {
     constructor(ip, camName) {
+        if (camName === undefined) {
+            throw new Error(`must define a camera 'name' for ${ip}`);
+        }
         this.ip = ip;
         this.camName = camName;
         this.streamSegmentMax = 20;
         this.streamSegmentCurrent = 0;
-        this.mkdir(`./video/segments-${this.camName}`)
+        const archiveSettings = config.getArchiveSettings();
+        if (!archiveSettings || !archiveSettings.daysToKeep) {
+            throw new Error(`must specify 'daysToKeep'`);
+        }
+        this.archiveKeepMaxMS = config.getArchiveSettings().daysToKeep * DAY_MS;
+        this.mkdir(`./video/segments-${this.camName}`);
+        this.mkdir('./video/archives');
+        this.deleteStaleRecordings();
+    }
+    scheduleDeleteCheck() {
+        //figure out how long until tomorrow at 6AM.
+        const d = new Date(Date.now() + DAY_MS);
+        d.setHours(6);
+        d.setMinutes(0);
+        d.setSeconds(0);
+        this.log(`scheduling delete check for ${d.toLocaleDateString()} ${d.toLocaleTimeString()}`);
+        setTimeout(
+            this.deleteStaleRecordings.bind(this),
+           d.getTime() - Date.now());
     }
     mkdir(dirPath) {
         try {
@@ -21,13 +46,12 @@ class StreamArchiver {
         }
     }
     getCurrentArchiveName() {
-        const d = new Date(),
-            pad = num => num < 10 ? '0' + num : num,
-            dateStr = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()),
-            hour = d.getHours();
-        let hourStr = hour > 13 ? hour - 12 : hour;
-        hourStr += hour >= 12 ? 'pm' : 'am';
-        return `./video/archive-${this.camName}-${dateStr}-${hourStr}.mp4`
+        const d = new Date();
+        //get a date based on the current hour
+        d.setMinutes(0);
+        d.setSeconds(0);
+        d.setMilliseconds(0);
+        return `./video/archives/${this.camName}-${d.getTime()}.mp4`
     }
     log(msg) {
         console.log(`[archiver - ${this.camName}] - ${msg}`);
@@ -66,6 +90,31 @@ class StreamArchiver {
             }
         });
         r.pipe(writeStream);
+    }
+    async deleteStaleRecordings() {
+        const archives = (await readdir('./video/archives'));
+
+        archives
+            .filter(f => f.indexOf(`${this.camName}-`) === 0)
+            .forEach(archive => {
+                const ms = archive.replace(`${this.camName}-`, '')
+                        .replace('.mp4', ''),
+                    d = new Date();
+                d.setTime(parseInt(ms, 10));
+                //set to the beginning of the day, this deletes a full day at a time because delete checks only run daily
+                d.setHours(0);
+                d.setMinutes(0);
+                d.setMilliseconds(0);
+                
+                if (Date.now() - d.getTime() > this.archiveKeepMaxMS) {
+                    this.log(`${archive} - is beyond the keep limit, deleting`);
+                    fs.unlink(path.join('./video/archives', archive), err => {
+                        if (err) throw err;
+                    })
+                }
+            });
+
+        this.scheduleDeleteCheck();
     }
 }
 
