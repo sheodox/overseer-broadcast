@@ -24,10 +24,9 @@ camera = picamera.PiCamera(resolution=(1280, 720), framerate=fps)
 stream = picamera.PiCameraCircularIO(camera, seconds=recording_time)
 
 camera.annotate_background = picamera.Color('black')
-camera.annotate_text = dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 camera.start_recording(stream, format='h264', quality=quality)
 start = dt.datetime.now()
-camera.exposure_mode = 'fireworks'
+
 while True:
     while (dt.datetime.now() - start).seconds < recording_time:
         camera.annotate_text = dt.datetime.now().strftime('%Y-%m-%d %I:%M:%S %p')
