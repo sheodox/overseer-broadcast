@@ -4,7 +4,7 @@
   "description": "View a network of local raspberry pi cameras.",
   "main": "app.js",
   "scripts": {
-    "broadcast": "export NODE_ENV=production && forever start -c /bin/bash broadcaster-src/record.sh",
+    "broadcast": "export NODE_ENV=production && forever start -c python3 broadcaster-src/broadcast.py",
     "deploy-broadcast": "forever stopall && git pull && npm run broadcast",
     "start": "forever start overseer-src/server.js",
     "stop": "forever stop overseer-src/server.js",

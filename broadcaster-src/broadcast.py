@@ -5,7 +5,7 @@ import subprocess
 import json
 
 try:
-    file = open('../config.json')
+    file = open('config.json')
     config = json.load(file)
     file.close()
 except FileNotFoundError:
@@ -37,6 +37,6 @@ while True:
     start = dt.datetime.now()
     camera.request_key_frame()
     
-    subprocess.Popen(['./box.sh', str(fps), config['overseer-server'], config['save-directory']])
+    subprocess.Popen(['broadcaster-src/box.sh', str(fps), config['overseer-server'], config['save-directory']])
 
 camera.stop_recording()
