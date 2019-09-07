@@ -47,10 +47,10 @@ class StreamArchiver {
         await this.generateMissingThumbnails();
     }
     pathInArchives(file) {
-        return path.join('./video/archives', file);
+        return path.join(this.archivePath, file);
     }
     pathInThumbnails(file) {
-        return path.join('./video/thumbnails', file);
+        return path.join(this.thumbnailPath, file);
     }
     scheduleDeleteCheck() {
         //figure out how long until tomorrow at 6AM.
@@ -116,18 +116,31 @@ class StreamArchiver {
     }
     async generateMissingThumbnails() {
         const archives = (await readdir(this.archivePath))
+            .filter(f => f.indexOf(this.camName) === 0)
             .map(f => f.replace(/\.mp4$/, ''));
+        
+        this.log(`generating any missing thumbnails`);
+        let generated = 0;
         for (let i = 0; i < archives.length; i++) {
-            await this.generateThumbnail(archives[i]);
+            generated += (await this.generateThumbnail(archives[i])) ? 1 : 0;
         }
+        this.log(`done generating ${generated} missing thumbnails`);
     }
+
+    /**
+     * Generate a matching thumbnail for the specified archive
+     * @param fileName
+     * @returns {Promise<boolean>} - true if a thumbnail was just generated
+     */
     async generateThumbnail(fileName) {
         const thumbnailPath = this.pathInThumbnails(fileName + '.png');
         const thumbnailExists = await this.fileExists(thumbnailPath);
         if (!thumbnailExists) {
             this.log(`generating thumbnail for ${fileName}`);
-            await exec(`ffmpeg -i ${this.pathInArchives(fileName)}.mp4 -ss 00:00:01.00 -vframes 1 ./video/thumbnails/${fileName}.png`);
+            await exec(`ffmpeg -i ${this.pathInArchives(fileName)}.mp4 -ss 00:00:01.000 -filter:v scale="280:-1" -vframes 1 ${thumbnailPath}`);
+            return true;
         }
+        return false;
     }
     getSegmentFileName(segmentNumber) {
         return `./video/segments-${this.camName}/segment-${segmentNumber}.mp4`;
