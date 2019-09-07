@@ -34,11 +34,16 @@
     vertical-align: top;
   }
   
-  .archive-selection {
+  .archive-select-link {
     width: 10rem;
     text-align: center;
     height: #{(10 * (9/16))}rem;
     background-size: contain;
     display: block;
+    
+    .archive-time {
+      background: rgba(0, 0, 0, 0.85);
+      color: white;
+    }
   }
 }
