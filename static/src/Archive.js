@@ -115,8 +115,13 @@ class ArchiveViewer extends React.Component {
                     </thead>
                     <tbody>
                         {dayList.archives.map((archive) => {
+                            const anchorStyles = {
+                                backgroundImage: `url(thumbnail/${archive.file})`
+                            };
                             return <tr key={archive.file}>
-                                <td><a href='#' onClick={this.view.bind(this, archive)}>{archive.date.toLocaleTimeString()}</a></td>
+                                <td>
+                                    <a className="archive-selection" style={anchorStyles} href='#' onClick={this.view.bind(this, archive)}>{archive.date.toLocaleTimeString()}</a>
+                                </td>
                                 <td>{getPrettyBytes(archive.size)}</td>
                             </tr>;
                         })}
@@ -129,9 +134,11 @@ class ArchiveViewer extends React.Component {
         return <section>
             <If renderWhen={!!this.state.selectedArchive.file}>
                 <video controls src={videoSrc} />
-                <h2>{(this.state.selectedArchive.date || new Date()).toLocaleString()}</h2>
-                <p>{this.state.selectedArchive.file}</p>
-                <p><a download href={videoSrc}>download ({getPrettyBytes(this.state.selectedArchive.size)})</a></p>
+                <div className="video-info">
+                    <h2>{(this.state.selectedArchive.date || new Date()).toLocaleString()}</h2>
+                    <p>{this.state.selectedArchive.file}</p>
+                    <p><a download={this.state.selectedArchive.file + '.mp4'} href={videoSrc}>download ({getPrettyBytes(this.state.selectedArchive.size)})</a></p>
+                </div>
             </If>
             <div className="date-selector">
                 {dateSelector}

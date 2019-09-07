@@ -3,8 +3,20 @@ const config = require('./config'),
     path = require('path'),
     fs = require('fs'),
     readdir = util.promisify(fs.readdir),
+    stat = util.promisify(fs.stat),
     child_process = require('child_process'),
+    execpromisified = util.promisify(child_process.exec),
     request = require('request');
+
+const exec = async (...args) => {
+    try {
+        await execpromisified(...args);
+    }
+    catch(e) {
+        console.error(e);
+    }
+};
+
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 class StreamArchiver {
@@ -23,8 +35,22 @@ class StreamArchiver {
         }
         this.archiveKeepMaxMS = config.getArchiveSettings().daysToKeep * DAY_MS;
         this.mkdir(`./video/segments-${this.camName}`);
-        this.mkdir('./video/archives');
-        this.deleteStaleRecordings();
+        this.archivePath = './video/archives';
+        this.mkdir(this.archivePath);
+        this.thumbnailPath = './video/thumbnails';
+        this.mkdir('./video/thumbnails');
+        this.postInit();
+    }
+    //anything that is initialization related that needs to be done asynchronously so can't be done in the constructor
+    async postInit() {
+        await this.deleteStaleRecordings();
+        await this.generateMissingThumbnails();
+    }
+    pathInArchives(file) {
+        return path.join('./video/archives', file);
+    }
+    pathInThumbnails(file) {
+        return path.join('./video/thumbnails', file);
     }
     scheduleDeleteCheck() {
         //figure out how long until tomorrow at 6AM.
@@ -51,12 +77,12 @@ class StreamArchiver {
         date.setMinutes(0);
         date.setSeconds(0);
         date.setMilliseconds(0);
-        return `./video/archives/${this.camName}-${date.getTime()}.mp4`
+        return `${this.camName}-${date.getTime()}`;
     }
     log(msg) {
         console.log(`[archiver - ${this.camName}] - ${msg}`);
     }
-    archiveSegments(archiveReason, archiveDate) {
+    async archiveSegments(archiveReason, archiveDate) {
         this.log(archiveReason);
         const archiveFile = this.getCurrentArchiveName(archiveDate),
             start = Date.now();
@@ -64,13 +90,44 @@ class StreamArchiver {
         for (let i = 0; i < this.streamSegmentCurrent; i++) {
             catArgs.push(`-cat ${this.getSegmentFileName(i)}`);
         }
-        child_process
-            .exec(`MP4Box ${catArgs.join(' ')} ${archiveFile}`, (err, stdout, stderr) => {
-                this.log(`concat new segment took ${Date.now() - start}ms`);
-                console.log(stdout);
-                console.log(stderr);
-            });
         this.streamSegmentCurrent = 0;
+        try {
+            await exec(`MP4Box ${catArgs.join(' ')} ${this.pathInArchives(archiveFile)}.mp4`);
+            await this.generateThumbnail(archiveFile);
+            
+            this.log(`archiving segments took ${Date.now() - start}ms`);
+        }
+        catch(e) {
+            this.log(`error archiving ${archiveFile}`);
+            console.error(e);
+        }
+    }
+    async fileExists(file) {
+        try {
+            await stat(file);
+            return true;
+        }
+        catch(e) {
+            if (e.code === 'ENOENT') {
+                return false;
+            }
+            throw e;
+        }
+    }
+    async generateMissingThumbnails() {
+        const archives = (await readdir(this.archivePath))
+            .map(f => f.replace(/\.mp4$/, ''));
+        for (let i = 0; i < archives.length; i++) {
+            await this.generateThumbnail(archives[i]);
+        }
+    }
+    async generateThumbnail(fileName) {
+        const thumbnailPath = this.pathInThumbnails(fileName + '.png');
+        const thumbnailExists = await this.fileExists(thumbnailPath);
+        if (!thumbnailExists) {
+            this.log(`generating thumbnail for ${fileName}`);
+            await exec(`ffmpeg -i ${this.pathInArchives(fileName)}.mp4 -ss 00:00:01.00 -vframes 1 ./video/thumbnails/${fileName}.png`);
+        }
     }
     getSegmentFileName(segmentNumber) {
         return `./video/segments-${this.camName}/segment-${segmentNumber}.mp4`;
@@ -94,6 +151,7 @@ class StreamArchiver {
                 d.setHours(this.lastSegmentHour);
                 this.archiveSegments(`the hour has changed, archiving all old footage immediately`, d);
             }
+            this.log(`received segments ${this.streamSegmentCurrent} / ${this.streamSegmentMax}`);
             if (this.streamSegmentCurrent === this.streamSegmentMax) {
                 this.archiveSegments(`max of ${this.streamSegmentMax} segments reached for ${this.camName}, adding all to the archive`, new Date());
             }
@@ -102,27 +160,32 @@ class StreamArchiver {
         r.pipe(writeStream);
     }
     async deleteStaleRecordings() {
-        const archives = (await readdir('./video/archives'));
+        const cleanDir = async p => {
+            const files = await readdir(p);
+            files
+                .filter(f => f.indexOf(`${this.camName}-`) === 0)
+                .forEach(file => {
+                    const ms = file.replace(`${this.camName}-`, '')
+                            .replace(/\.(mp4|png)$/, ''),
+                        d = new Date();
+                    d.setTime(parseInt(ms, 10));
+                    //set to the beginning of the day, this deletes a full day at a time because delete checks only run daily
+                    d.setHours(0);
+                    d.setMinutes(0);
+                    d.setMilliseconds(0);
 
-        archives
-            .filter(f => f.indexOf(`${this.camName}-`) === 0)
-            .forEach(archive => {
-                const ms = archive.replace(`${this.camName}-`, '')
-                        .replace('.mp4', ''),
-                    d = new Date();
-                d.setTime(parseInt(ms, 10));
-                //set to the beginning of the day, this deletes a full day at a time because delete checks only run daily
-                d.setHours(0);
-                d.setMinutes(0);
-                d.setMilliseconds(0);
-                
-                if (Date.now() - d.getTime() > this.archiveKeepMaxMS) {
-                    this.log(`${archive} - is beyond the keep limit, deleting`);
-                    fs.unlink(path.join('./video/archives', archive), err => {
-                        if (err) throw err;
-                    })
-                }
-            });
+                    if (Date.now() - d.getTime() > this.archiveKeepMaxMS) {
+                        this.log(`${file} - is from ${d.toLocaleDateString()} which is beyond the keep limit, deleting`);
+                        fs.unlink(path.join(p, file), err => {
+                            if (err) throw err;
+                        })
+                    }
+                });
+        };
+
+        await cleanDir(this.archivePath);
+        await cleanDir(this.thumbnailPath);
+
 
         this.scheduleDeleteCheck();
     }

@@ -1,3 +1,5 @@
+@import 'colors';
+
 #archive {
   margin: 0 1rem;
   @media (min-width: 1350px) {
@@ -30,5 +32,13 @@
   .archive-list {
     display: inline-block;
     vertical-align: top;
+  }
+  
+  .archive-selection {
+    width: 10rem;
+    text-align: center;
+    height: #{(10 * (9/16))}rem;
+    background-size: contain;
+    display: block;
   }
 }
