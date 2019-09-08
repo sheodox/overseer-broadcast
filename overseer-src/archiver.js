@@ -18,7 +18,9 @@ const exec = async (...args) => {
 };
 
 
-const DAY_MS = 24 * 60 * 60 * 1000;
+const HOUR_MS = 60 * 60 * 1000,
+    DAY_MS = 24 * HOUR_MS;
+
 class StreamArchiver {
     constructor(ip, camName) {
         if (camName === undefined) {
@@ -160,8 +162,8 @@ class StreamArchiver {
             //otherwise we end up having up to several minutes in the wrong archive
             if (typeof this.lastSegmentHour === 'number' && this.lastSegmentHour !== hour) {
                 const d = new Date();
-                //add it to the previous hour's archive
-                d.setHours(this.lastSegmentHour);
+                //add it to the previous hour's archive, don't just set the hour or if the date changes it'll be off by 24 hours
+                d.setTime(d.getTime() - HOUR_MS);
                 this.archiveSegments(`the hour has changed, archiving all old footage immediately`, d);
             }
             this.log(`received segments ${this.streamSegmentCurrent} / ${this.streamSegmentMax}`);
