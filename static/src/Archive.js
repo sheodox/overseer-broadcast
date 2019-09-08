@@ -87,10 +87,11 @@ class ArchiveViewer extends React.Component {
             selectedDate: dateStr
         })
     }    
-    view(archive) {
+    view(archive, e) {
         this.setState({
             selectedArchive: archive
         });
+        e.preventDefault();
     }
     render() {
         const dateSelector = this.props.recordedDates.map((dateStr) => {
