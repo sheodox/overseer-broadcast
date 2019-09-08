@@ -2,7 +2,7 @@ import React from 'react';
 import Nav from './Nav';
 import Live from "./Live";
 import Archive from "./Archive";
-import {MemoryRouter as Router, Route} from 'react-router-dom';
+import {HashRouter as Router, Route} from 'react-router-dom';
 
 class App extends React.Component {
     constructor(props) {
