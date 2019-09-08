@@ -17,7 +17,7 @@ for (let i = 0; i < broadcasters.length; i++) {
 }
 
 async function entry(req, res) {
-    res.render('index', {title: 'Overseer Broadcast', streams: broadcasters.map((broadcaster, index) => index)})
+    res.render('index', {title: 'Overseer Broadcast'})
 }
 router.get('/', entry);
 
