@@ -8,6 +8,8 @@ class VideoStreamer extends React.Component {
         this.videoId = this.props.stream;
         this.lastBuffer = new Uint8Array([]);
         this.segmentNumber = 0;
+        this.segmentsErrored = 0;
+        this.segmentsTimedout = 0;
         this.totalBytes = 0;
         this.ms = new MediaSource();
         this.src = URL.createObjectURL(this.ms);
@@ -49,10 +51,14 @@ class VideoStreamer extends React.Component {
                 this.totalBytes += evt.loaded;
                 resolve(xhr.response);
             };
-            xhr.ontimeout = reject;
-            //prevent flooding the server with requests
+            xhr.ontimeout = () => {
+                this.segmentsTimedout++;
+                reject();
+            };
+            //prevent flooding the server with requests if it's offline or something
             xhr.onerror = () => {
                 setTimeout(() => {
+                    this.segmentsErrored++;
                     reject();
                 }, 500);
             };
@@ -95,6 +101,7 @@ class VideoStreamer extends React.Component {
                 this.fetchNextSegment();
             })
             .catch(() => {
+                this.updateStats();
                 this.fetchNextSegment()
             })
     }
@@ -103,7 +110,7 @@ class VideoStreamer extends React.Component {
             //don't show hourly bandwidth until after a few segments have been requested,
             //the first segment comes back immediately so we'd otherwise show some absurd estimate
             hourlyBandwidth = this.segmentNumber > 5 ? `\n${getPrettyBytes((this.totalBytes / (Date.now() - this.start)) * 60 * 60 * 1000)}/hr` : '';
-        this.setState({stats: `${this.segmentNumber} segments\ntotal ${getPrettyBytes(this.totalBytes)}\navg ${averageSize}${hourlyBandwidth}`});
+        this.setState({stats: `${this.segmentNumber} segments (${this.segmentsErrored} errored, ${this.segmentsTimedout} timed out)\ntotal ${getPrettyBytes(this.totalBytes)}\navg ${averageSize}${hourlyBandwidth}`});
     }
 }
 
