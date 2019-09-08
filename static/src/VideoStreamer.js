@@ -109,8 +109,10 @@ class VideoStreamer extends React.Component {
         const averageSize = getPrettyBytes(this.totalBytes / this.segmentNumber),
             //don't show hourly bandwidth until after a few segments have been requested,
             //the first segment comes back immediately so we'd otherwise show some absurd estimate
-            hourlyBandwidth = this.segmentNumber > 5 ? `\n${getPrettyBytes((this.totalBytes / (Date.now() - this.start)) * 60 * 60 * 1000)}/hr` : '';
-        this.setState({stats: `${this.segmentNumber} segments (${this.segmentsErrored} errored, ${this.segmentsTimedout} timed out)\ntotal ${getPrettyBytes(this.totalBytes)}\navg ${averageSize}${hourlyBandwidth}`});
+            hourlyBandwidth = this.segmentNumber > 5 ? `\n${getPrettyBytes((this.totalBytes / (Date.now() - this.start)) * 60 * 60 * 1000)}/hr` : '',
+            showFailed = this.segmentsTimedout || this.segmentsErrored,
+            failedSegments = `(${this.segmentsErrored} errored, ${this.segmentsTimedout} timed out)`;
+        this.setState({stats: `${this.segmentNumber} segments ${showFailed ? failedSegments : ''}\ntotal ${getPrettyBytes(this.totalBytes)}\navg ${averageSize}${hourlyBandwidth}`});
     }
 }
 
