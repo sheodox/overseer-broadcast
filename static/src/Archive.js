@@ -88,10 +88,15 @@ class ArchiveViewer extends React.Component {
         })
     }    
     view(archive, e) {
+        //don't break hash routing
+        e.preventDefault();
+        
         this.setState({
             selectedArchive: archive
         });
-        e.preventDefault();
+        
+        //scroll up to the top
+        window.scrollTo(0, 0);
     }
     render() {
         const dateSelector = this.props.recordedDates.map((dateStr) => {
