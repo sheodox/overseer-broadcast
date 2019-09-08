@@ -10,7 +10,7 @@ When the next segment of video is available, the broadcasting server will notify
  
 # Setup
  
-`MP4Box`, [`Nodejs`](https://nodejs.org/en/) and [`forever`](https://github.com/foreversd/forever) are required on each machine this is used on. On every broadcasting server `curl`, and `nginx` are required. Static IPs should be used for every machine.
+`MP4Box`, [`Nodejs`](https://nodejs.org/en/) and [`forever`](https://github.com/foreversd/forever) are required on each machine this is used on. On every broadcasting server `curl`, and `nginx` are required. `ffmpeg` is also needed on the overseer server. Static IPs should be used for every machine.
 
 ## Config
 On the overseer server a `config.json` is needed at the root level of the git clone, with IPs of each camera Raspberry Pi:
