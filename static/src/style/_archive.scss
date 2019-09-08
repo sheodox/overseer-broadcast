@@ -32,6 +32,10 @@
   .archive-list {
     display: inline-block;
     vertical-align: top;
+    
+    ul {
+      list-style: none;
+    }
   }
   
   .archive-select-link {
@@ -40,10 +44,27 @@
     height: #{(10 * (9/16))}rem;
     background-size: contain;
     display: block;
+    text-decoration: none;
+    position: relative;
+    margin-bottom: 1rem;
     
     .archive-time {
       background: rgba(0, 0, 0, 0.85);
+      border-radius: 2px;
+      padding: 0 1px;
       color: white;
+    }
+    
+    .archive-size {
+      background: rgba(0, 0, 0, 0.85);
+      border-radius: 2px;
+      padding: 0 1px;
+      color: white;
+      font-family: 'Homespun', sans-serif;
+      font-size: 0.7rem;
+      bottom: 0;
+      right: 0;
+      position: absolute;
     }
   }
 }

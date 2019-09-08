@@ -106,29 +106,19 @@ class ArchiveViewer extends React.Component {
             return <div key={list.broadcaster} className="archive-list">
                 <h2>{list.broadcaster}</h2>
                 <p>{getPrettyBytes(totalSize)} total</p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Archive</th>
-                            <th>Size</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {dayList.archives.map((archive) => {
-                            const anchorStyles = {
-                                backgroundImage: `url(thumbnail/${archive.file})`
-                            };
-                            return <tr key={archive.file}>
-                                <td>
-                                    <a className="archive-select-link" style={anchorStyles} href='#' onClick={this.view.bind(this, archive)}>
-                                        <span className="archive-time">{archive.date.toLocaleTimeString()}</span>
-                                    </a>
-                                </td>
-                                <td>{getPrettyBytes(archive.size)}</td>
-                            </tr>;
-                        })}
-                    </tbody>
-                </table>
+                <ul>
+                    {dayList.archives.map((archive) => {
+                        const anchorStyles = {
+                            backgroundImage: `url(thumbnail/${archive.file})`
+                        };
+                        return <li key={archive.file}>
+                            <a className="archive-select-link" style={anchorStyles} href='#' onClick={this.view.bind(this, archive)}>
+                                <span className="archive-time">{archive.date.toLocaleTimeString()}</span>
+                                <span className="archive-size">{getPrettyBytes(archive.size)}</span>
+                            </a>
+                        </li>;
+                    })}
+                </ul>
             </div>
         });
         
