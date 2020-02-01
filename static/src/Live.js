@@ -29,7 +29,7 @@ class Live extends React.Component {
         const videos = this.state.broadcasters.map((b, i) => <VideoComponent active={this.state.active} key={i} stream={i}/>);
         
         return (
-            <section>
+            <section className="streams">
                 <div id="inactive-prompt" className={this.state.active ? 'hidden' : ''}>
                     <p>Are you still watching?</p>
                     <button id="confirm-active" onClick={this.resetTimeout.bind(this)}>Yes</button>
