@@ -8,6 +8,7 @@ class VideoStreamer extends React.Component {
         this.videoId = this.props.stream;
         this.lastBuffer = new Uint8Array([]);
         this.segmentNumber = 0;
+        this.segmentsRequested = 0;
         this.segmentsErrored = 0;
         this.segmentsTimedout = 0;
         this.totalBytes = 0;
@@ -26,8 +27,10 @@ class VideoStreamer extends React.Component {
         this.video.current.play();
         this.fetchNextSegment();
     }
-    componentDidUpdate() {
-        if (this.props.active && !this.state.streaming) {
+    componentDidUpdate(prevProps) {
+        // we've reactivated now, restart the stream
+        if (this.props.active && !prevProps.active) {
+            this.segmentNumber = 0;
             this.fetchNextSegment()
         }
     }
@@ -82,6 +85,7 @@ class VideoStreamer extends React.Component {
             streaming: true
         });
 
+        this.segmentsRequested++;
         this.fetchArrayBuffer(`broadcaster/${this.videoId}/stream/segment/${this.segmentNumber++}`)
             .then(buffer => {
                 if (this.dead) {
@@ -112,7 +116,7 @@ class VideoStreamer extends React.Component {
             hourlyBandwidth = this.segmentNumber > 5 ? `\n${getPrettyBytes((this.totalBytes / (Date.now() - this.start)) * 60 * 60 * 1000)}/hr` : '',
             showFailed = this.segmentsTimedout || this.segmentsErrored,
             failedSegments = `(${this.segmentsErrored} errored, ${this.segmentsTimedout} timed out)`;
-        this.setState({stats: `${this.segmentNumber} segments ${showFailed ? failedSegments : ''}\ntotal ${getPrettyBytes(this.totalBytes)}\navg ${averageSize}${hourlyBandwidth}`});
+        this.setState({stats: `${this.segmentsRequested} segments ${showFailed ? failedSegments : ''}\ntotal ${getPrettyBytes(this.totalBytes)}\navg ${averageSize}${hourlyBandwidth}`});
     }
 }
 
