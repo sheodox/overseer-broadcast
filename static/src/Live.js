@@ -7,7 +7,8 @@ class Live extends React.Component {
         this.activeTimeout = 10 * 60 * 1000;
         this.state = {
             active: true,
-            broadcasters: []
+            broadcasters: [],
+            forever: false
         };
     }
     async componentDidMount() {
@@ -18,24 +19,42 @@ class Live extends React.Component {
     }
     scheduleInactive() {
         setTimeout(() => {
-            this.setState({active: false});
+            if (this.state.forever) {
+                this.scheduleInactive();
+            }
+            else {
+                this.setState({active: false});
+            }
         }, this.activeTimeout);
     }
     resetTimeout() {
         this.setState({active: true});
         this.scheduleInactive();
     }
+    foreverToggle(e)  {
+        this.setState({
+            forever: e.target.checked
+        })
+    }
     render() {
         const videos = this.state.broadcasters.map((b, i) => <VideoComponent active={this.state.active} key={i} stream={i}/>);
-        
+
         return (
-            <section className="streams">
-                <div id="inactive-prompt" className={this.state.active ? 'hidden' : ''}>
-                    <p>Are you still watching?</p>
-                    <button id="confirm-active" onClick={this.resetTimeout.bind(this)}>Yes</button>
+            <React.Fragment>
+                <section className="streams">
+                    <div id="inactive-prompt" className={this.state.active ? 'hidden' : ''}>
+                        <p>Are you still watching?</p>
+                        <button id="confirm-active" onClick={this.resetTimeout.bind(this)}>Yes</button>
+                    </div>
+                    {videos}
+
+                </section>
+
+                <div className="centered-controls">
+                    <input type="checkbox" onChange={this.foreverToggle.bind(this)} id="stream-forever"/>
+                    <label htmlFor="stream-forever">Stream forever</label>
                 </div>
-                {videos}
-            </section>
+            </React.Fragment>
         )
     }
 }
