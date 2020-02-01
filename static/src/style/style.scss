@@ -3,7 +3,7 @@
 @import 'archive';
 @import 'colors';
 
-* {
+*, *::before, *::after {
     box-sizing: border-box !important;
 }
 
@@ -51,5 +51,26 @@ button:disabled {
 
     > * {
 
+    }
+}
+
+input[type="checkbox"] {
+    visibility: hidden;
+
+    + label::before {
+        content: ' ';
+        width: 1rem;
+        height: 1rem;
+        display: inline-block;
+        background: #272c38;
+        border-radius: 2px;
+        margin-left: -1.2rem;
+        margin-bottom: -1px;
+        margin-right: 0.2rem;
+        transition: border-color 0.2s, background-color 0.2s;
+    }
+
+    &:checked + label::before {
+        background-color: $blue;
     }
 }
