@@ -1,4 +1,5 @@
 $aspect: 9/16;
+$singleColumnMax: 1350px;
 
 video {
     $width: 95vw;
@@ -9,10 +10,18 @@ video {
     height: 720px;
     background: #0a0c10;
 
-    @media (min-width: 1350px) {
+}
+@media (min-width: $singleColumnMax) {
+    video:not(.large-player) {
         $width: 47vw;
         max-width: $width;
         max-height: $width * $aspect;
+    }
+
+}
+@media (max-width: $singleColumnMax) {
+    #large-player-checkbox-container {
+        display: none;
     }
 }
 

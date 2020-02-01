@@ -8,7 +8,8 @@ class Live extends React.Component {
         this.state = {
             active: true,
             broadcasters: [],
-            forever: false
+            forever: false,
+            large: false
         };
     }
     async componentDidMount() {
@@ -31,29 +32,36 @@ class Live extends React.Component {
         this.setState({active: true});
         this.scheduleInactive();
     }
-    foreverToggle(e)  {
-        this.setState({
-            forever: e.target.checked
-        })
+    toggleState(stateKey) {
+        return e => {
+            this.setState({
+                [stateKey]: e.target.checked
+            });
+        }
     }
     render() {
-        const videos = this.state.broadcasters.map((b, i) => <VideoComponent active={this.state.active} key={i} stream={i}/>);
+        const videos = this.state.broadcasters.map((b, i) => <VideoComponent active={this.state.active} key={i} stream={i} large={this.state.large}/>);
 
         return (
             <React.Fragment>
-                <section className="streams">
-                    <div id="inactive-prompt" className={this.state.active ? 'hidden' : ''}>
-                        <p>Are you still watching?</p>
-                        <button id="confirm-active" onClick={this.resetTimeout.bind(this)}>Yes</button>
-                    </div>
-                    {videos}
-
-                </section>
-
                 <div className="centered-controls">
-                    <input type="checkbox" onChange={this.foreverToggle.bind(this)} id="stream-forever"/>
-                    <label htmlFor="stream-forever">Stream forever</label>
+                    <input type="checkbox" onChange={this.toggleState('forever')} id="stream-forever"/>
+                    <label htmlFor="stream-forever">Uninterrupted streaming</label>
+
+                    <div id="large-player-checkbox-container">
+                        <input type="checkbox" onChange={this.toggleState('large')} id="large-player-checkbox" />
+                        <label htmlFor="large-player-checkbox">Large stream players</label>
+                    </div>
                 </div>
+
+                <div id="inactive-prompt" className={this.state.active ? 'hidden' : ''}>
+                    <p>Are you still watching?</p>
+                    <button id="confirm-active" onClick={this.resetTimeout.bind(this)}>Yes</button>
+                </div>
+
+                <section className="streams">
+                    {videos}
+                </section>
             </React.Fragment>
         )
     }

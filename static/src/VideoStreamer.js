@@ -36,7 +36,7 @@ class VideoStreamer extends React.Component {
     }
     render() {
         return <div className="stream-container">
-            <video src={this.src} ref={this.video} className="stream" controls autoPlay data-stream-id={this.props.stream} muted />
+            <video src={this.src} ref={this.video} className={'stream ' + (this.props.large ? 'large-player' : '')} controls autoPlay data-stream-id={this.props.stream} muted />
             <span className="stats">{this.state.stats}</span>
         </div>
     }
