@@ -1,14 +1,19 @@
+$aspect: 9/16;
+
 video {
-    max-width: 95vw;
+    $width: 95vw;
+    max-width: $width;
     /* maintain aspect ratio */
-    max-height: 53.4375vw;
+    max-height: $aspect * $width;
     width: 1280px;
     height: 720px;
     background: #0a0c10;
-}
 
-video {
-    margin: 0 auto;
+    @media (min-width: 1350px) {
+        $width: 47vw;
+        max-width: $width;
+        max-height: $width * $aspect;
+    }
 }
 
 section.streams {
@@ -19,11 +24,8 @@ section.streams {
 }
 
 .stream-container {
-    @media (min-width: 1350px) {
-        width: 1350px;
-        margin: 0 auto;
-    }
     position: relative;
+    margin: 1rem;
 
     .stats {
         position: absolute;
