@@ -65,3 +65,9 @@ nav {
     }
 
 }
+
+@media (max-width: 60rem) {
+    header h1 {
+        display: none;
+    }
+}
