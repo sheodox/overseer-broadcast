@@ -79,7 +79,7 @@ class Weather extends React.Component {
 
 		return (
 			<div id="weather">
-				<div className="horizontal">
+				<div id="weather-current-container" className="horizontal">
 					<div id="weather-current" className="forecast-box">
 						<div className="horizontal">
 							<div className="vertical">

@@ -118,3 +118,12 @@
         max-height: 100vh;
     }
 }
+
+@media (max-width: 700px) {
+    #weather {
+        width: 100%;
+    }
+    #weather-current-container {
+        justify-content: center;
+    }
+}
