@@ -11,6 +11,9 @@
     box-sizing: border-box !important;
 }
 
+html {
+    min-height: 100vh;
+}
 body {
     margin: 0;
     background: #0d0e11;
