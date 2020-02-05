@@ -38,12 +38,16 @@ nav {
         display: inline-block;
         line-height: 50px;
 
+        &:first-of-type a {
+            padding-left: 0;
+        }
+
         a {
             display: inline-block;
             color: white;
             cursor: pointer;
             transition: border 0.2s, background 0.2s;
-            padding: 0.3rem 1rem 0.2rem 1rem;
+            padding: 0.3rem 0 0.2rem 1rem;
             font-size: 1rem;
             font-weight: 600;
             text-transform: uppercase;
