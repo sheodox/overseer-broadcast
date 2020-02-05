@@ -9,8 +9,24 @@ import Screensaver from './Screensaver';
 import lsCache from './lsCache';
 const settings = lsCache('settings');
 
-// ten minutes
-const SCREENSAVER_TIMEOUT = 10 * 60 * 1000;
+const SCREENSAVER_TIMEOUT = 10 * 60 * 1000; // ten minutes
+const META_POLL_INTERVAL = 5 * 60 * 1000; // five minutes
+
+//poll occasionally for the server being rebooted, probably means updated code, reload the page
+let lastBoot = null;
+async function pollMeta() {
+    const meta = await fetch( 'meta')
+        .then(res => res.json());
+
+    if (lastBoot && meta.bootTime > lastBoot) {
+        location.reload();
+    }
+    else {
+        lastBoot = meta.bootTime;
+    }
+}
+pollMeta();
+setInterval(pollMeta, META_POLL_INTERVAL);
 
 class App extends React.Component {
     constructor(props) {
