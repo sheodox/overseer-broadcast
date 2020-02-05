@@ -1,5 +1,8 @@
 import React from 'react';
 import If from './If';
+import lsCache from "./lsCache";
+
+const settings = lsCache('settings');
 
 class Archive extends React.Component {
     constructor(props) {
@@ -135,7 +138,7 @@ class ArchiveViewer extends React.Component {
                 <div className="video-info">
                     <h2>{(this.state.selectedArchive.date || new Date()).toLocaleString()}</h2>
                     <p>{this.state.selectedArchive.file}</p>
-                    <p><a download={this.state.selectedArchive.file + '.mp4'} href={videoSrc}>download ({getPrettyBytes(this.state.selectedArchive.size)})</a></p>
+                    {!settings.touchpadMode && <p><a download={this.state.selectedArchive.file + '.mp4'} href={videoSrc}>download ({getPrettyBytes(this.state.selectedArchive.size)})</a></p>}
                 </div>
             </If>
             <div className="date-selector">
