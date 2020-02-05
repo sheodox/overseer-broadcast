@@ -62,7 +62,7 @@ class Weather extends React.Component {
 			return (
 				<div id="weather-minimal">
 					<p>
-						{nice.temp(currently.temperature)}
+						{nice.temp(currently.temperature)} {currently.summary}
 					</p>
 					{!!alerts.length && <p className="danger">
 						{alerts.length > 1 ? `${alerts.length} weather alerts` : 'one weather alert'}

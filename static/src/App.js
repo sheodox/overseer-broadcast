@@ -10,8 +10,7 @@ import lsCache from './lsCache';
 const settings = lsCache('settings');
 
 // ten minutes
-// const SCREENSAVER_TIMEOUT = 10 * 60 * 1000;
-const SCREENSAVER_TIMEOUT = 2 * 1000;
+const SCREENSAVER_TIMEOUT = 10 * 60 * 1000;
 
 class App extends React.Component {
     constructor(props) {
