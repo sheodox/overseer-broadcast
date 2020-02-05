@@ -107,3 +107,11 @@ a {
 .muted {
     color: gray;
 }
+
+// don't show cursors on touchpads, Pi touchscreens still show a cursor, not needed.
+html.touchpad {
+    cursor: none;
+    a, button {
+        cursor: none !important;
+    }
+}

@@ -9,6 +9,10 @@ import Screensaver from './Screensaver';
 import lsCache from './lsCache';
 const settings = lsCache('settings');
 
+if (settings.touchpadMode) {
+    document.documentElement.classList.add('touchpad');
+}
+
 const SCREENSAVER_TIMEOUT = 10 * 60 * 1000; // ten minutes
 const META_POLL_INTERVAL = 5 * 60 * 1000; // five minutes
 
