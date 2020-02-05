@@ -1,5 +1,7 @@
 import React from 'react';
 import VideoComponent from "./VideoStreamer";
+import lsCache from './lsCache';
+const settings = lsCache('settings');
 
 class Live extends React.Component {
     constructor(props) {
@@ -32,11 +34,15 @@ class Live extends React.Component {
         this.setState({active: true});
         this.scheduleInactive();
     }
-    toggleState(stateKey) {
+    toggleState(stateKey, settingsKey) {
         return e => {
             this.setState({
                 [stateKey]: e.target.checked
             });
+
+            if (settingsKey) {
+                settings[settingsKey] = e.target.checked;
+            }
         }
     }
     render() {
@@ -45,11 +51,11 @@ class Live extends React.Component {
         return (
             <React.Fragment>
                 <div className="centered-controls">
-                    <input type="checkbox" onChange={this.toggleState('forever')} id="stream-forever"/>
+                    <input type="checkbox" onChange={this.toggleState('forever')} id="stream-forever" />
                     <label htmlFor="stream-forever">Uninterrupted streaming</label>
 
                     <div id="large-player-checkbox-container">
-                        <input type="checkbox" onChange={this.toggleState('large')} id="large-player-checkbox" />
+                        <input type="checkbox" onChange={this.toggleState('large', 'largeStreamPlayers')} id="large-player-checkbox" defaultChecked={settings.largeStreamPlayers} />
                         <label htmlFor="large-player-checkbox">Large stream players</label>
                     </div>
                 </div>
