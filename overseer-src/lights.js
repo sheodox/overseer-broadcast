@@ -10,6 +10,8 @@ const router = require('express').Router(),
 	},
 	cache = require('./cache')('lights');
 
+const LIGHTS_POLL_INTERVAL = 10 * 1000;
+
 class Lights {
 	constructor() {
 		this.ready = Promise.resolve()
@@ -25,6 +27,10 @@ class Lights {
 		this.api = await api.createLocal(ip).connect(cache.user.username);
 
 		await this.getGroups();
+
+		setTimeout(() => {
+			this.getGroups()
+		}, LIGHTS_POLL_INTERVAL)
 
 	}
 

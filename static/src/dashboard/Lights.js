@@ -1,4 +1,5 @@
 import React from 'react';
+const LIGHTS_POLL_INTERVAL = 10 * 1000;
 
 class Lights extends React.Component {
 	constructor(props) {
@@ -10,6 +11,13 @@ class Lights extends React.Component {
 
 	componentDidMount() {
 		this.update();
+		this.lightsPollInterval = setInterval(() => {
+			this.update();
+		}, LIGHTS_POLL_INTERVAL)
+	}
+
+	componentWillUnmount() {
+		clearInterval(this.lightsPollInterval);
 	}
 
 	async update() {
