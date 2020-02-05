@@ -28,7 +28,7 @@ class Lights {
 
 		await this.getGroups();
 
-		setTimeout(() => {
+		setInterval(() => {
 			this.getGroups()
 		}, LIGHTS_POLL_INTERVAL)
 
