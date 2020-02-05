@@ -1,5 +1,10 @@
 @import "mixins";
 
+//used to prevent scrollbars showing on the documentElement
+.noscroll {
+    overflow: hidden;
+}
+
 #screensaver {
     @include fullscreen();
     justify-content: center;
