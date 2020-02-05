@@ -25,6 +25,11 @@ class Weather extends React.Component {
 		const data = await fetch('weather')
 			.then(res => res.json());
 
+		//if we no longer have alerts, we don't want old alerts hanging around
+		if (!data.alerts) {
+			data.alerts = [];
+		}
+
 		this.setState(data);
 		console.log(data);
 	}
@@ -50,8 +55,23 @@ class Weather extends React.Component {
 			return null;
 		}
 
-		const {currently, minutely, alerts} = this.state,
-			daily = this.state.daily.data.map((day, index) => {
+		const {currently, minutely, alerts} = this.state;
+
+		//screensaver
+		if (this.props.mode === 'minimal') {
+			return (
+				<div id="weather-minimal">
+					<p>
+						{nice.temp(currently.temperature)}
+					</p>
+					{!!alerts.length && <p className="danger">
+						{alerts.length > 1 ? `${alerts.length} weather alerts` : 'one weather alert'}
+					</p>}
+				</div>
+			);
+		}
+
+		const daily = this.state.daily.data.map((day, index) => {
 				return <ForecastDay key={`forecast-${day.time}`} forecast={day} dayOffset={index}/>
 			}),
 			fnToggleAlerts = this.toggleAlertDetails.bind(this),

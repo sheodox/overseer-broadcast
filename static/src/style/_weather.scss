@@ -1,5 +1,51 @@
 @import 'mixins';
 
+.temp100 {
+    color: #cc006c;
+}
+.temp90 {
+    color: #fe3300;
+}
+.temp80 {
+    color: #fe6601;
+}
+.temp70 {
+    color: #fe8a33;
+}
+.temp60  {
+    color: #ffbf00;
+}
+.temp50 {
+    color: #fdff00;
+}
+.temp40 {
+    color: #3fff6e;
+}
+.temp30 {
+    color: #34cbc6;
+}
+.temp20 {
+    color: #35cbcb;
+}
+.temp10 {
+    color: #009afe;
+}
+.temp0 {
+    color: #2f34c9;
+}
+.temp-10 {
+    color: #6a00ce;
+}
+.temp-20 {
+    color: #9901f6;
+}
+.temp-30 {
+    color: #cd98fe;
+}
+.temp-bottom {
+    color: #e3e1ed;
+}
+
 #weather {
     padding: 1rem;
     width: 75%;
@@ -9,52 +55,6 @@
         padding: 0.5rem;
         background: #14171e;
         border-radius: 0.1rem;
-    }
-
-    .temp100 {
-        color: #cc006c;
-    }
-    .temp90 {
-        color: #fe3300;
-    }
-    .temp80 {
-        color: #fe6601;
-    }
-    .temp70 {
-        color: #fe8a33;
-    }
-    .temp60  {
-        color: #ffbf00;
-    }
-    .temp50 {
-        color: #fdff00;
-    }
-    .temp40 {
-        color: #3fff6e;
-    }
-    .temp30 {
-        color: #34cbc6;
-    }
-    .temp20 {
-        color: #35cbcb;
-    }
-    .temp10 {
-        color: #009afe;
-    }
-    .temp0 {
-        color: #2f34c9;
-    }
-    .temp-10 {
-        color: #6a00ce;
-    }
-    .temp-20 {
-        color: #9901f6;
-    }
-    .temp-30 {
-        color: #cd98fe;
-    }
-    .temp-bottom {
-        color: #e3e1ed;
     }
 
     #weather-current {

@@ -3,6 +3,8 @@
 @import 'archive';
 @import 'colors';
 @import 'dashboard';
+@import 'settings';
+@import 'screensaver';
 @import 'mixins';
 
 *, *::before, *::after {
@@ -89,7 +91,12 @@ input[type="checkbox"] {
     flex-direction: column;
 }
 
+$dangerColor: #c50015;
 button.danger {
     color: white;
-    background: #c50015;
+    background: $dangerColor;
+}
+
+p.danger {
+    color: $dangerColor;
 }

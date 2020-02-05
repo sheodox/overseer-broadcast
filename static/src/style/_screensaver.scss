@@ -1,0 +1,17 @@
+@import "mixins";
+
+#screensaver {
+    @include fullscreen();
+    justify-content: center;
+    background: black;
+    z-index: 999999;
+
+    #screensaver-info {
+        text-align: center;
+        justify-content: center;
+    }
+
+    p {
+        margin: 0.2rem 0;
+    }
+}

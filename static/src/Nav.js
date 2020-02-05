@@ -8,7 +8,8 @@ class Nav extends React.Component {
         this.list = [
             {text: 'Live', id: 'live', link: '/'},
             {text: 'Archives', id: 'archives', link: '/archive'},
-            {text: 'Dashboard', id: 'dashboard', link: '/dashboard'}
+            {text: 'Dashboard', id: 'dashboard', link: '/dashboard'},
+            {text: 'Settings', id: 'settings', link: '/settings'}
         ];
     }
     createLink(item) {
