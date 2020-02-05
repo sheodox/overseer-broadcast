@@ -17,7 +17,7 @@ function Settings(props) {
 			<h2>Settings</h2>
 
 			<form onSubmit={save}>
-				<p>Touchpad mode is intended for wall mounted always-on displays. It includes some features</p>
+				<p>Touchpad mode is intended for wall mounted always-on displays. It includes some features like a screen saver during periods of inactivity, disabling archive downloading, and hidden cursors.</p>
 				<input type="checkbox" id="touchpad-mode" defaultChecked={settings.touchpadMode} ref={touchpadRef} />
 				<label htmlFor="touchpad-mode">Touchpad Mode</label>
 
