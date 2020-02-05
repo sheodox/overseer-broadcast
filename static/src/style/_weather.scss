@@ -1,0 +1,120 @@
+@import 'mixins';
+
+#weather {
+    padding: 1rem;
+    width: 75%;
+
+    .forecast-box {
+        margin: 0.5rem;
+        padding: 0.5rem;
+        background: #14171e;
+        border-radius: 0.1rem;
+    }
+
+    .temp100 {
+        color: #cc006c;
+    }
+    .temp90 {
+        color: #fe3300;
+    }
+    .temp80 {
+        color: #fe6601;
+    }
+    .temp70 {
+        color: #fe8a33;
+    }
+    .temp60  {
+        color: #ffbf00;
+    }
+    .temp50 {
+        color: #fdff00;
+    }
+    .temp40 {
+        color: #3fff6e;
+    }
+    .temp30 {
+        color: #34cbc6;
+    }
+    .temp20 {
+        color: #35cbcb;
+    }
+    .temp10 {
+        color: #009afe;
+    }
+    .temp0 {
+        color: #2f34c9;
+    }
+    .temp-10 {
+        color: #6a00ce;
+    }
+    .temp-20 {
+        color: #9901f6;
+    }
+    .temp-30 {
+        color: #cd98fe;
+    }
+    .temp-bottom {
+        color: #e3e1ed;
+    }
+
+    #weather-current {
+        h2 {
+            font-size: 1.2rem;
+            margin: 0 1rem 0 0;
+        }
+        svg {
+            font-size: 2.5rem;
+        }
+        #current-temp {
+            font-size: 2rem;
+            margin: 0;
+        }
+    }
+
+    .inline-data {
+        white-space: nowrap;
+    }
+
+    #daily {
+        overflow: auto;
+        padding: 1rem;
+
+        .forecast-day {
+            flex-shrink: 0;
+            flex-basis: min-content;
+            $smallFont: 0.8rem;
+
+            p {
+                margin: 0;
+            }
+
+            h2 {
+                margin: 0;
+                font-size: 1.1rem;
+                white-space: nowrap;
+            }
+
+            .summary {
+                margin: 0;
+                width: 7rem;
+                font-size: $smallFont;
+            }
+            .forecast-stats {
+
+            }
+            .precipitation-amounts {
+                margin-left: 1rem;
+                font-size: $smallFont;
+            }
+        }
+    }
+
+    #weather-alerts {
+        @include fullscreen();
+        @include overlay();
+        text-align: center;
+        padding: 2rem;
+        overflow: auto;
+        max-height: 100vh;
+    }
+}

@@ -13,17 +13,25 @@ When the next segment of video is available, the broadcasting server will notify
 `MP4Box`, [`Nodejs`](https://nodejs.org/en/) and [`forever`](https://github.com/foreversd/forever) are required on each machine this is used on. On every broadcasting server `curl`, and `nginx` are required. `ffmpeg` is also needed on the overseer server. Static IPs should be used for every machine.
 
 ## Config
-On the overseer server a `config.json` is needed at the root level of the git clone, with IPs of each camera Raspberry Pi:
+On the overseer server a `config.json` is needed at the root level of the git clone, with IPs of each camera Raspberry Pi. You will also need a Dark Sky weather API key and coordinates for your location (Dark Sky API calls should not exceed ~300 per day).
 ```
 {
- "broadcasters": [
-   {
-     "ip": "192.168.1.180"
-   },
-   {
-     "ip": "192.168.1.181"
-   }
- ]
+  "weather": {
+    "apiKey": "somethingsecret",
+    "latitude": 40.6993,
+    "longitude": -74.0237
+  }
+  "archives": {
+    "daysToKeep": 5
+  }
+  "broadcasters": [
+    {
+      "ip": "192.168.1.180"
+    },
+    {
+      "ip": "192.168.1.181"
+    }
+  ]
 }
 ```
 Additionally you will need to run `npm install` to install the web server's dependencies.

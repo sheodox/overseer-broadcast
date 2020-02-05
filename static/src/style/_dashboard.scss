@@ -1,0 +1,81 @@
+@import "weather";
+
+#dashboard {
+    margin: 1rem;
+}
+#clock {
+    p {
+        margin: 0;
+    }
+    #time {
+        font-size: 3rem;
+        white-space: nowrap;
+    }
+    #date {
+        font-size: 2rem;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 850px) {
+    #clock {
+        #time {
+            font-size: 2rem;
+        }
+
+        #date {
+            font-size: 1.5rem;
+        }
+    }
+}
+
+#lights {
+    h2 {
+        font-size: 1.2rem;
+        text-align: center;
+    }
+    ul {
+        padding: 0;
+    }
+    li {
+        list-style: none;
+        margin-bottom: 0.2rem;
+    }
+    button {
+        width: 100%;
+    }
+}
+
+
+@keyframes left-glow {
+    from {
+
+    }
+    to {
+        box-shadow: -0.25rem 0 0.2rem -0.2rem $cyan;
+    }
+}
+
+.lights-button {
+    border-left: 1rem solid #272c38;
+    &:focus {
+        outline: none;
+    }
+    &.on {
+        border-left-color: $cyan;
+        animation: left-glow 1s infinite alternate;
+    }
+}
+
+#dashboard {
+    display: flex;
+    flex-direction: row;
+}
+
+#dashboard .dock {
+    width: 75%;
+}
+
+hr {
+    border-color: white;
+}

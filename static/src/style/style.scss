@@ -2,6 +2,8 @@
 @import 'nav';
 @import 'archive';
 @import 'colors';
+@import 'dashboard';
+@import 'mixins';
 
 *, *::before, *::after {
     box-sizing: border-box !important;
@@ -9,7 +11,7 @@
 
 body {
     margin: 0;
-    background: #1a1e26;
+    background: #0d0e11;
     color: white;
     font-family: "Roboto Light", sans-serif;
     margin-bottom: 1rem;
@@ -73,4 +75,21 @@ input[type="checkbox"] {
     &:checked + label::before {
         background-color: $blue;
     }
+}
+
+.horizontal {
+    display: flex;
+    flex-direction: row;
+    > *:not(:last-child) {
+        margin-right: 0.2rem;
+    }
+}
+.vertical {
+    display: flex;
+    flex-direction: column;
+}
+
+button.danger {
+    color: white;
+    background: #c50015;
 }
