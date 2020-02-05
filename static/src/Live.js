@@ -11,7 +11,7 @@ class Live extends React.Component {
             active: true,
             broadcasters: [],
             forever: false,
-            large: false
+            large: settings.largeStreamPlayers
         };
     }
     async componentDidMount() {
