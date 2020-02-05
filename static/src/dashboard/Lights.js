@@ -39,11 +39,9 @@ class Lights extends React.Component {
 		});
 
 		return (
-			<div id="lights">
+			<div id="lights" className="vertical">
 				<h2>Lights</h2>
-				<ul>
-					{lights}
-				</ul>
+				{lights}
 			</div>
 		)
 	}
@@ -51,9 +49,7 @@ class Lights extends React.Component {
 
 function Light(props) {
 	return (
-		<li>
-			<button onClick={props.toggle} className={'lights-button ' + (props.on ? 'on' : 'off')}>{props.name}</button>
-		</li>
+		<button onClick={props.toggle} className={'lights-button ' + (props.on ? 'on' : 'off')}>{props.name}</button>
 	)
 }
 

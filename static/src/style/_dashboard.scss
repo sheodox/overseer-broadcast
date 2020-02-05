@@ -34,15 +34,9 @@
         font-size: 1.2rem;
         text-align: center;
     }
-    ul {
-        padding: 0;
-    }
-    li {
-        list-style: none;
-        margin-bottom: 0.2rem;
-    }
     button {
         width: 100%;
+        margin-bottom: 0.2rem;
     }
 }
 
@@ -78,4 +72,5 @@
 
 hr {
     border-color: white;
+    width: 100%;
 }

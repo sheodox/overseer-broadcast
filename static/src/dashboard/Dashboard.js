@@ -7,7 +7,7 @@ export default class Dashboard extends React.Component {
 	render () {
 		return (
 			<div id="dashboard">
-				<div>
+				<div className="vertical">
 					<Clock />
 					<hr/>
 					<Lights />
