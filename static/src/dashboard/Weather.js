@@ -102,8 +102,7 @@ class Weather extends React.Component {
 				</div>
 
 				<p>
-					<small>Updated {nice.time(currently.time)} </small>
-					<a href="https://darksky.net/poweredby/">Powered by Dark Sky</a>
+					<small>Updated {nice.time(currently.time)} <a href="https://darksky.net/poweredby/">Powered by Dark Sky</a></small>
 				</p>
 			</div>
 		)
