@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import lsCache from './lsCache';
 const settings = lsCache('settings');
 
@@ -10,7 +10,18 @@ function Settings(props) {
 	function reload() {
 		location.reload();
 	}
+	const [bootTime, setBootTime] = useState(null);
 	const touchpadRef = React.createRef();
+
+	useEffect(() => {
+		const getMeta = async () => {
+			const meta = await fetch('meta').then(res => res.json()),
+				d = new Date();
+			d.setTime(meta.bootTime);
+			setBootTime(d.toLocaleString());
+		};
+		getMeta();
+	});
 
 	return (
 		<div id="settings">
@@ -27,7 +38,7 @@ function Settings(props) {
 			<br/>
 			<button onClick={reload}>Reload</button>
 			<p className="muted">
-				Icons provided by Font Awesome. Weather data is by Dark Sky.
+				Icons provided by Font Awesome. Weather data is by Dark Sky. {bootTime && `Server started ${bootTime}.`}
 			</p>
 		</div>
 	);
