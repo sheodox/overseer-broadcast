@@ -48,7 +48,8 @@
 
 #weather {
     padding: 1rem;
-    width: 75%;
+    flex: 1;
+    overflow: auto;
 
     .forecast-box {
         margin: 0.5rem;
