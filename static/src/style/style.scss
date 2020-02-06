@@ -118,3 +118,28 @@ html.touchpad {
         cursor: none !important;
     }
 }
+
+input[type=range] {
+    -webkit-appearance: none;
+    background: none !important;
+    width: 100%;
+
+    &::-webkit-slider-runnable-track, &::-moz-range-track {
+        background-color: $blue;
+        height: 0.2rem;
+    }
+
+    &::-webkit-slider-thumb, &::-moz-range-thumb {
+        -webkit-appearance: none;
+        cursor: pointer;
+        height: 1.75rem;
+        width: 1.75rem;
+        background: $blue;
+        border-radius: 50%;
+        margin-top: -0.875rem;
+    }
+
+    &:focus {
+        outline: none;
+    }
+}

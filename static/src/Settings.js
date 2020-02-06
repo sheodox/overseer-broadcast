@@ -10,6 +10,10 @@ function Settings(props) {
 	function reload() {
 		location.reload();
 	}
+	function toggleFullscreen() {
+		document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+	}
+
 	const [bootTime, setBootTime] = useState(null);
 	const touchpadRef = React.createRef();
 
@@ -35,8 +39,12 @@ function Settings(props) {
 				<br/>
 				<button>Save</button>
 			</form>
-			<br/>
-			<button onClick={reload}>Reload</button>
+
+			<div id="extra-button-group">
+				<button onClick={reload}>Reload</button>
+				<button onClick={toggleFullscreen}>Toggle Fullscreen</button>
+			</div>
+
 			<p className="muted">
 				Icons provided by Font Awesome. Weather data is by Dark Sky. {bootTime && `Server started ${bootTime}.`}
 			</p>
