@@ -14,7 +14,7 @@ class Weather {
 	async fetchWeatherData() {
 		try {
 			if (!cache.timestamp || Date.now() - cache.timestamp > WEATHER_DATA_STALE_TIME) {
-				this.log(`weather data stale, refreshing (${new Date().toLocaleString()})`);
+				this.log(`data stale, refreshing (${new Date().toLocaleString()})`);
 
 				cache.timestamp = Date.now();
 				cache.weather = JSON.parse(
