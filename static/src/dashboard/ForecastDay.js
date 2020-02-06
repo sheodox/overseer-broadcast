@@ -12,8 +12,10 @@ function ForecastDay(props) {
 
 	return (
 		<div className="forecast-day forecast-box">
-			<h2>{props.dayOffset === 0 ? 'Today' : nice.weekday(time)} <small>{nice.dateNumOnly(time)}</small></h2>
-			<FontAwesomeIcon size="lg" icon={nice.weatherIcon(props.forecast)} />
+			<div className="forecast-day-title-bar horizontal">
+				<h2>{props.dayOffset === 0 ? 'Today' : nice.weekday(time)} <small>{nice.dateNumOnly(time)}</small></h2>
+				<FontAwesomeIcon size="lg" icon={nice.weatherIcon(props.forecast)} />
+			</div>
 			<div className="horizontal">
 				<div className="vertical forecast-stats">
 					<div>{nice.temp(temperatureMax)}</div>

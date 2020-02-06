@@ -105,6 +105,15 @@
                 margin-left: 1rem;
                 font-size: $smallFont;
             }
+
+            .forecast-day-title-bar {
+                h2 {
+                    flex-grow: 0;
+                }
+                svg {
+                    flex-grow: 1;
+                }
+            }
         }
     }
 
