@@ -94,7 +94,7 @@ input[type="checkbox"] {
     flex-direction: column;
 }
 
-$dangerColor: #c50015;
+$dangerColor: red;
 button.danger {
     color: white;
     background: $dangerColor;

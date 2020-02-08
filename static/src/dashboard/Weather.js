@@ -65,7 +65,7 @@ class Weather extends React.Component {
 						{nice.temp(currently.temperature)} {currently.summary}
 					</p>
 					{!!alerts.length && <p className="danger">
-						{alerts.length > 1 ? `${alerts.length} weather alerts` : 'one weather alert'}
+						{alerts.length > 1 ? `${alerts.length} weather alerts` : alerts[0].title}
 					</p>}
 				</div>
 			);

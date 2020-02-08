@@ -16,7 +16,7 @@ class Screensaver extends React.Component {
 				<div id="screensaver-info" className="vertical">
 					<Clock/>
 					<Weather mode="minimal"/>
-					<p>Tap the screen</p>
+					<p className="muted">tap to wake</p>
 				</div>
 			</div>
 		)
