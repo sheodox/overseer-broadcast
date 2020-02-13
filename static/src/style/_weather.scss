@@ -140,3 +140,10 @@
 .alert-description {
     text-align: left;
 }
+#weather-graph {
+    align-self: center;
+}
+#weather-graph-container {
+    overflow: auto;
+    max-width: 95vw;
+}

@@ -3,6 +3,7 @@ import nice from './nice';
 import ForecastDay from "./ForecastDay";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Alerts from "./Alerts";
+import WeatherGraph from "./WeatherGraph";
 
 const WEATHER_REFRESH_INTERVAL = 1000 * 60 * 5;
 
@@ -95,6 +96,8 @@ class Weather extends React.Component {
 					</div>
 					{!!alerts.length && <button className="danger" onClick={fnToggleAlerts}>{alertButtonText}</button>}
 					{this.state.showAlertDetails && <Alerts alerts={alerts} closeAlerts={fnToggleAlerts} />}
+
+					<WeatherGraph weather={this.state} />
 				</div>
 
 				<div id="daily" className="horizontal">
