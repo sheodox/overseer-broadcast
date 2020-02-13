@@ -81,21 +81,23 @@ class Weather extends React.Component {
 		return (
 			<div id="weather">
 				<div id="weather-current-container" className="horizontal">
-					<div id="weather-current" className="forecast-box">
-						<div className="horizontal">
-							<div className="vertical">
-								<h2>Now</h2>
-								<FontAwesomeIcon icon={nice.weatherIcon(currently)} />
+					<div className="vertical">
+						<div id="weather-current" className="forecast-box">
+							<div className="horizontal">
+								<div className="vertical">
+									<h2>Now</h2>
+									<FontAwesomeIcon icon={nice.weatherIcon(currently)} />
+								</div>
+								<div>
+									<p id="current-temp">{nice.temp(currently.temperature)}</p>
+									<small className="nowrap">Feels like</small> <small className="nowrap">{nice.temp(currently.apparentTemperature)}</small>
+								</div>
 							</div>
-							<div>
-								<p id="current-temp">{nice.temp(currently.temperature)}</p>
-								<small>Feels like {nice.temp(currently.apparentTemperature)}</small>
-							</div>
+							<p>{minutely.summary}</p>
 						</div>
-						<p>{minutely.summary}</p>
+						{!!alerts.length && <button className="danger" onClick={fnToggleAlerts}>{alertButtonText}</button>}
+						{this.state.showAlertDetails && <Alerts alerts={alerts} closeAlerts={fnToggleAlerts} />}
 					</div>
-					{!!alerts.length && <button className="danger" onClick={fnToggleAlerts}>{alertButtonText}</button>}
-					{this.state.showAlertDetails && <Alerts alerts={alerts} closeAlerts={fnToggleAlerts} />}
 
 					<WeatherGraph weather={this.state} />
 				</div>
