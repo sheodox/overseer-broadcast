@@ -11,6 +11,8 @@ class WeatherGraph extends React.Component {
 		this.canvas = React.createRef();
 	}
 	componentDidMount() {
+		// crisp lines, need to do this only once or we end up slowly translating the canvas upwards and to the right
+		this.canvas.current.getContext('2d').translate(0.5, -0.5);
 		this.renderGraphs();
 	}
 	componentDidUpdate() {
@@ -60,8 +62,6 @@ class WeatherGraph extends React.Component {
 				return (canvas.height / 2) - scale * (temperature - pivotTemp)
 			};
 		context.clearRect(0, 0, canvas.width, canvas.height);
-		// crisp lines
-		context.translate(0.5, -0.5);
 
 
 		// draw a line at 0°F and 32°F
