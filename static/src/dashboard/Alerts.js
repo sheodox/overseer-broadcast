@@ -10,7 +10,9 @@ function Alerts(props) {
 	return (
 		<div id="weather-alerts">
 			<button onClick={props.closeAlerts}>Close</button>
-			{alerts}
+			<div className="alerts-detail-list">
+				{alerts}
+			</div>
 		</div>
 	)
 }

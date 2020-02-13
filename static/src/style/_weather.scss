@@ -125,6 +125,18 @@
         padding: 2rem;
         overflow: auto;
         max-height: 100vh;
+        display: flex;
+        flex-direction: column;
+
+        button {
+            flex: 0;
+            padding: 1rem;
+            align-self: center;
+        }
+        .alerts-detail-list {
+            flex: 1;
+            overflow: auto;
+        }
     }
 }
 
