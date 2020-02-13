@@ -126,25 +126,36 @@ class WeatherGraph extends React.Component {
 
 
 		//collect the temperatures for every time we know of, and
-		const timeData = [];
+		const timeData = [],
+			apparentTimeData = [];
 		hourly.forEach(hourlyData => {
 			timeData.push({
 				time: hourlyData.time,
 				temp: hourlyData.temperature,
 				precip: hourlyData.precipType || 'none'
-			})
+			});
+			apparentTimeData.push({
+				time: hourlyData.time,
+				temp: hourlyData.apparentTemperature,
+				precip: 'apparent'
+			});
 		});
 		daily.forEach((day) => {
-			const minData = {
-					time: day.temperatureMinTime,
-					temp: day.temperatureMin,
-					precip: 'unknown'
-				},
-				maxData = {
-					time: day.temperatureMaxTime,
-					temp: day.temperatureMax,
-					precip: 'unknown'
-				};
+			const getData = (minOrMax) => ({
+				time: day[`temperature${minOrMax}Time`],
+				temp: day[`temperature${minOrMax}`],
+				precip: 'unknown'
+			}),
+			getApparentData = (minOrMax) => ({
+				time: day[`apparentTemperature${minOrMax}Time`],
+				temp: day[`apparentTemperature${minOrMax}`],
+				precip: 'apparent'
+			});
+			const minData = getData('Min'),
+				apparentMinData = getApparentData('Min'),
+				maxData = getData('Max'),
+				apparentMaxData = getApparentData('Max');
+
 			//figure out if the high or low occurs sooner, so we don't draw a line that goes backwards in time
 			if (day.temperatureMinTime < day.temperatureMaxTime) {
 				timeData.push(minData);
@@ -153,36 +164,50 @@ class WeatherGraph extends React.Component {
 				timeData.push(maxData);
 				timeData.push(minData);
 			}
+
+			if (day.apparentTemperatureMinTime < day.apparentTemperatureMaxTime) {
+				apparentTimeData.push(apparentMinData);
+				apparentTimeData.push(apparentMaxData);
+			} else {
+				apparentTimeData.push(apparentMaxData);
+				apparentTimeData.push(apparentMinData);
+			}
 		});
 
-		//break drawing into segments, so we can change color of each line individually, but will need to keep the last coordinates around
-		let lastCoords = null,
-			lastDate = 0;
-		timeData.forEach(data => {
-			//calculate day offset
-			const date = dateFromTimestamp(data.time);
-			//don't go back in time if we switch from hourly to daily data and there is some overlap in the numbers
-			if (date < lastDate) {
-				return;
-			}
-			lastDate = date;
-			context.beginPath();
-			context.strokeStyle = {
-				rain: '#2f34c9',
-				snow: '#00a1ff',
-				none: '#fff',
-				unknown: '#53617a'
-			}[data.precip];
-			if (lastCoords) {
-				moveTo(...lastCoords);
-			}
-			lastCoords = [timeToX(date), tempToY(data.temp)];
-			context.lineWidth = 3;
-			lineTo(...lastCoords);
+		const plotTemps = (temps) => {
+			//break drawing into segments, so we can change color of each line individually, but will need to keep the last coordinates around
+			let lastCoords = null,
+				lastDate = 0;
+			temps.forEach(data => {
+				//calculate day offset
+				const date = dateFromTimestamp(data.time);
+				//don't go back in time if we switch from hourly to daily data and there is some overlap in the numbers
+				if (date < lastDate) {
+					return;
+				}
+				lastDate = date;
+				context.beginPath();
+				context.strokeStyle = {
+					rain: '#2f34c9',
+					snow: '#00a1ff',
+					none: '#fff',
+					unknown: '#53617a',
+					apparent: '#9021ff'
+				}[data.precip];
+				if (lastCoords) {
+					moveTo(...lastCoords);
+				}
+				lastCoords = [timeToX(date), tempToY(data.temp)];
+				context.lineWidth = data.precip === 'apparent' ? 1 : 3;
+				lineTo(...lastCoords);
+				context.stroke();
+			});
+
 			context.stroke();
-		});
+		};
 
-		context.stroke();
+		plotTemps(timeData);
+		plotTemps(apparentTimeData);
 	}
 
 	render() {
