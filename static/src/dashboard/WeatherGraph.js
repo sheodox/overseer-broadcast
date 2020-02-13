@@ -65,17 +65,17 @@ class WeatherGraph extends React.Component {
 
 
 		// draw a line at 0°F and 32°F
-		const line = (x1, y1, x2, y2, color) => {
+		const line = (x1, y1, x2, y2, color, dash=[]) => {
 				context.beginPath();
 				context.strokeStyle = color;
-				// context.lineWidth = 1;
+				context.setLineDash(dash);
 				moveTo(x1, y1);
 				lineTo(x2, y2);
 				context.stroke();
 			},
-			horizontalLine = (temp, color) => {
+			horizontalLine = (temp, color, dash) => {
 				const y = tempToY(temp);
-				line(axisBufferSpace, y, canvas.width, y, color);
+				line(axisBufferSpace, y, canvas.width, y, color, dash);
 			},
 			verticalLine = (x, color) => {
 				line(x, 0, x, canvas.height, color);
@@ -109,9 +109,9 @@ class WeatherGraph extends React.Component {
 			context.fillText(`${dayName} ${date.getMonth() + 1}/${date.getDate()}`, timeToX(date) + 3, canvas.height - 5);
 		}
 
-		const labelTemp = (temp, color) => {
+		const labelTemp = (temp, color, dash) => {
 			context.fillText(`${temp}°F`, 0, tempToY(temp));
-			horizontalLine(temp, color);
+			horizontalLine(temp, color, dash);
 		};
 
 		context.fillStyle = '#fff';
@@ -119,7 +119,7 @@ class WeatherGraph extends React.Component {
 		labelTemp(80, '#fe6601');
 		labelTemp(60, '#ffbf00');
 		labelTemp(40, '#3fff6e');
-		labelTemp(32, '#34cbc9');
+		labelTemp(32, '#34cbc9', [3, 3]);
 		labelTemp(20, '#35cbcb');
 		labelTemp(0, '#2f34c9');
 		labelTemp(-20, '#9901f6');
