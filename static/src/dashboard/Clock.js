@@ -18,7 +18,7 @@ class Clock extends React.Component {
 				time: d.toLocaleTimeString(),
 				date: d.toDateString()
 			})
-		})
+		}, 1000)
 	}
 	render() {
 		return (
