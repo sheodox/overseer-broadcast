@@ -3,7 +3,11 @@ import React from 'react';
 // horizontal pixels per hour on the canvas
 const hourlyStep = 3,
 	msInHour = 60 * 60 * 1000,
-	msInDay = msInHour * 24;
+	msInDay = msInHour * 24,
+	// it's not useful to show super low probabilities of snow/rain on the graph.
+	// consider anything below this threshold to not be high enough chance to matter
+	// otherwise we're going to be crying wolf all the time.
+	PRECIP_PROBABILITY_THRESHOLD = 0.3;
 
 class WeatherGraph extends React.Component {
 	constructor(props) {
@@ -133,7 +137,7 @@ class WeatherGraph extends React.Component {
 			timeData.push({
 				time: hourlyData.time,
 				temp: hourlyData.temperature,
-				precip: hourlyData.precipType || 'none'
+				precip: hourlyData.precipProbability > PRECIP_PROBABILITY_THRESHOLD ? hourlyData.precipType : 'none'
 			});
 			apparentTimeData.push({
 				time: hourlyData.time,
@@ -179,32 +183,66 @@ class WeatherGraph extends React.Component {
 			//break drawing into segments, so we can change color of each line individually, but will need to keep the last coordinates around
 			let lastCoords = null,
 				lastDate = 0;
-			temps.forEach(data => {
-				//calculate day offset
-				const date = dateFromTimestamp(data.time);
-				//don't go back in time if we switch from hourly to daily data and there is some overlap in the numbers
-				if (date < lastDate) {
-					return;
-				}
-				lastDate = date;
-				context.beginPath();
-				context.strokeStyle = {
-					rain: '#2f34c9',
-					snow: '#00a1ff',
-					none: '#fff',
-					unknown: '#53617a',
-					apparent: '#9021ff'
-				}[data.precip];
-				if (lastCoords) {
-					moveTo(...lastCoords);
-				}
-				lastCoords = [timeToX(date), tempToY(data.temp)];
-				context.lineWidth = data.precip === 'apparent' ? 1 : 3;
-				lineTo(...lastCoords);
-				context.stroke();
-			});
 
-			context.stroke();
+			// between the hourly and daily temps we'll have some overlap, make sure we skip daily temps that have coverage
+			// from an hourly temp already, basically make sure we only consider times that are later than the last time
+			// we processed, or the graph will draw a line backwards in time to the left
+			temps = temps.reduce((done, temp) => {
+				if (temp.time < lastDate) {
+					return done;
+				}
+				done.push(temp);
+				lastDate = temp.time;
+				return done;
+			}, []);
+			lastDate = 0;
+
+			const newBatch = (firstTemp) => ({precip: firstTemp.precip, temps: [firstTemp]});
+
+			const batchedTemps = [];
+			let currentBatch = newBatch(temps[0]);
+
+			//seeded currentBatch with the first temp's data, skip it
+			temps.slice(1).forEach(tempData => {
+				if (tempData.precip === currentBatch.precip) {
+					currentBatch.temps.push(tempData);
+				}
+				else {
+					batchedTemps.push(currentBatch);
+					currentBatch = newBatch(tempData);
+				}
+			});
+			batchedTemps.push(currentBatch);
+
+			batchedTemps
+				.forEach(batch => {
+					context.beginPath();
+					if (lastCoords) {
+						moveTo(...lastCoords);
+					}
+
+					context.strokeStyle = {
+						rain: '#2f34c9',
+						snow: '#00a1ff',
+						none: '#fff',
+						unknown: '#53617a',
+						apparent: '#9021ff'
+					}[batch.precip];
+					context.lineWidth = batch.precip === 'apparent' ? 1 : 3;
+
+					batch.temps.forEach(data => {
+						const date = dateFromTimestamp(data.time);
+						//don't go back in time if we switch from hourly to daily data and there is some overlap in the numbers
+						lastDate = date;
+						if (date < lastDate) {
+							return;
+						}
+						lastCoords = [timeToX(date), tempToY(data.temp)];
+						lineTo(...lastCoords);
+					});
+					context.stroke();
+				});
+
 		};
 
 		plotTemps(timeData);
