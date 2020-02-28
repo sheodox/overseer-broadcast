@@ -169,13 +169,17 @@ class WeatherGraph extends React.Component {
 		});
 
 		const drawTime = (timestamp, color) => {
-			context.fillStyle = color;
-			const date = dateFromTimestamp(timestamp);
-			context.fillText(
-				`${nice.shortTime(date)}`,
-				timeToX(date),
-				10
-			)
+			const date = dateFromTimestamp(timestamp),
+				x = timeToX(date);
+			//don't want to show times that are off the graphable area, would look weird overlapping the temperature axis labeling area
+			if (x > axisBufferSpace) {
+				context.fillStyle = color;
+				context.fillText(
+					`${nice.shortTime(date)}`,
+					x,
+					10
+				)
+			}
 		};
 		daily.forEach((day) => {
 			//draw the time the sunset and sunrise happen
