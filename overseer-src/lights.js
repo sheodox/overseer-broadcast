@@ -66,7 +66,7 @@ class Lights {
 		const nextState = group.on ? lightStates.off : lightStates.on;
 		group.on = !group.on;
 
-		await this.api.groups.setGroupState(id, nextState);
+		this.api.groups.setGroupState(id, nextState);
 		return {};
 	}
 
