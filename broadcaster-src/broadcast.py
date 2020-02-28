@@ -18,6 +18,7 @@ print("Overseer Broadcast camera running!")
 recording_time = 10
 fps = 10
 quality = 32
+silence_logs = True
 
 camera = picamera.PiCamera(resolution=(1280, 720), framerate=fps)
 # buffer more seconds than we actually will save
@@ -37,6 +38,9 @@ while True:
     start = dt.datetime.now()
     camera.request_key_frame()
     
-    subprocess.Popen(['broadcaster-src/box.sh', str(fps), config['overseer-server'], config['save-directory']])
+    # ignore all logs, seems we can't just ignore stdout because mp4box logs stdout to stderr,
+    # without this, the forever logs will grow and eventually fill the entire disk
+    log_location = subprocess.DEVNULL if silence_logs else None
+    subprocess.Popen(['broadcaster-src/box.sh', str(fps), config['overseer-server'], config['save-directory']], stderr=log_location, stdout=log_location)
 
 camera.stop_recording()
