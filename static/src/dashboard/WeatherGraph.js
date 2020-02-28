@@ -1,7 +1,7 @@
 import React from 'react';
 
 // horizontal pixels per hour on the canvas
-const hourlyStep = 4,
+const hourlyStep = 5,
 	msInHour = 60 * 60 * 1000,
 	msInDay = msInHour * 24,
 	// it's not useful to show super low probabilities of snow/rain on the graph.
@@ -35,6 +35,7 @@ class WeatherGraph extends React.Component {
 			return d;
 		};
 
+		//a buffer area for text describing the vertical axis
 		const axisBufferSpace = 30,
 			hourly = this.props.weather.hourly.data,
 			daily = this.props.weather.daily.data,
@@ -86,11 +87,24 @@ class WeatherGraph extends React.Component {
 				line(x, 0, x, canvas.height, color, options);
 			};
 
-		//a buffer area for text describing the vertical axis
 		const timeToX = date => {
 				return axisBufferSpace + ((date.getTime() - Date.now()) / msInHour) * hourlyStep;
 			},
 			timeColor = '#fff';
+
+		//draw bands of color to indicate daylight
+		for (let i = 0; i < 7; i++) {
+			context.fillStyle = 'rgba(47,48,14,0.53)';
+			const startX = Math.max(axisBufferSpace, timeToX(dateFromTimestamp(daily[i].sunriseTime))),
+				endX = timeToX(dateFromTimestamp(daily[i].sunsetTime));
+			context.fillRect(
+				startX,
+				0,
+				endX - startX,
+				canvas.height
+			);
+		}
+
 		// vertical line for the start of each day
 		for (let day = 0; day < 10; day++) {
 			const date = new Date();
