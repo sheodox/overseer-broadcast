@@ -10,6 +10,16 @@
     justify-content: center;
     background: black;
     z-index: 999999;
+    font-size: 150%;
+
+    #clock {
+        #time {
+            font-size: 5rem;
+        }
+        #date {
+            font-size: 2rem;
+        }
+    }
 
     #screensaver-info {
         text-align: center;
