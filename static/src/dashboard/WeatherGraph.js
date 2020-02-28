@@ -1,7 +1,7 @@
 import React from 'react';
 
 // horizontal pixels per hour on the canvas
-const hourlyStep = 3,
+const hourlyStep = 4,
 	msInHour = 60 * 60 * 1000,
 	msInDay = msInHour * 24,
 	// it's not useful to show super low probabilities of snow/rain on the graph.
@@ -82,8 +82,8 @@ class WeatherGraph extends React.Component {
 				const y = tempToY(temp);
 				line(axisBufferSpace, y, canvas.width, y, color, options);
 			},
-			verticalLine = (x, color) => {
-				line(x, 0, x, canvas.height, color);
+			verticalLine = (x, color, options) => {
+				line(x, 0, x, canvas.height, color, options);
 			};
 
 		//a buffer area for text describing the vertical axis
@@ -92,7 +92,7 @@ class WeatherGraph extends React.Component {
 			},
 			timeColor = '#fff';
 		// vertical line for the start of each day
-		for (let day = 1; day < 10; day++) {
+		for (let day = 0; day < 10; day++) {
 			const date = new Date();
 			date.setTime(Date.now() + day * msInDay);
 			//the beginning of the day 'day' number of days from now
@@ -100,18 +100,24 @@ class WeatherGraph extends React.Component {
 			date.setMinutes(0);
 			date.setSeconds(0);
 			date.setMilliseconds(0);
-			verticalLine(timeToX(date), timeColor);
-			const dayName = [
-				'Sun',
-				'Mon',
-				'Tue',
-				'Wed',
-				'Thu',
-				'Fri',
-				'Sat'
-			][date.getDay()];
-			context.fillStyle = '#fff';
-			context.fillText(`${dayName} ${date.getMonth() + 1}/${date.getDate()}`, timeToX(date) + 3, canvas.height - 5);
+			if (day > 0) {
+				verticalLine(timeToX(date), timeColor);
+				const dayName = [
+					'Sun',
+					'Mon',
+					'Tue',
+					'Wed',
+					'Thu',
+					'Fri',
+					'Sat'
+				][date.getDay()];
+				context.fillStyle = '#fff';
+				context.fillText(`${dayName} ${date.getMonth() + 1}/${date.getDate()}`, timeToX(date) + 3, canvas.height - 5);
+			}
+
+			//noon the same day
+			date.setHours(12);
+			verticalLine(timeToX(date), timeColor, {dash: [1, 6]})
 		}
 
 		const labelTemp = (temp, color, options) => {
