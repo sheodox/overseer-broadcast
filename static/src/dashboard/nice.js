@@ -45,6 +45,12 @@ export default {
 		return formatDateAs('toDateString')(timestamp).replace(/ .*/, '');
 	},
 	time: formatDateAs('toLocaleTimeString'),
+	shortTime: date => {
+		const hours = date.getHours(),
+			displayHours = hours > 12 ? hours - 12 : hours,
+			displayMinutes = date.getMinutes().toString().padStart(2, '0');
+		return `${displayHours}:${displayMinutes}`;
+	},
 	temp: num => {
 		return <span className={'temp ' + getColorClass(num)}>{Math.round(num)}°F</span>
 	},

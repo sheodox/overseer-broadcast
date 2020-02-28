@@ -1,4 +1,5 @@
 import React from 'react';
+import nice from './nice';
 
 // horizontal pixels per hour on the canvas
 const hourlyStep = 5,
@@ -131,7 +132,8 @@ class WeatherGraph extends React.Component {
 
 			//noon the same day
 			date.setHours(12);
-			verticalLine(timeToX(date), timeColor, {dash: [1, 6]})
+			const noonX = timeToX(date);
+			verticalLine(noonX, timeColor, {dash: [1, 6]});
 		}
 
 		const labelTemp = (temp, color, options) => {
@@ -165,7 +167,21 @@ class WeatherGraph extends React.Component {
 				precip: 'apparent'
 			});
 		});
+
+		const drawTime = (timestamp, color) => {
+			context.fillStyle = color;
+			const date = dateFromTimestamp(timestamp);
+			context.fillText(
+				`${nice.shortTime(date)}`,
+				timeToX(date),
+				10
+			)
+		};
 		daily.forEach((day) => {
+			//draw the time the sunset and sunrise happen
+			drawTime(day.sunriseTime, '#faff35');
+			drawTime(day.sunsetTime, '#387896');
+
 			const getData = (minOrMax) => ({
 				time: day[`temperature${minOrMax}Time`],
 				temp: day[`temperature${minOrMax}`],
