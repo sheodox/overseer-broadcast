@@ -41,9 +41,11 @@ button {
     vertical-align: top;
 }
 
-button:not(:disabled):hover {
-    background: #272c38;
-    color: $pink;
+html:not(.touchpad) {
+    button:not(:disabled):hover {
+        background: #272c38;
+        color: $pink;
+    }
 }
 
 button:disabled {
