@@ -4,6 +4,7 @@ import ForecastDay from "./ForecastDay";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Alerts from "./Alerts";
 import WeatherGraph from "./WeatherGraph";
+import WeatherTempDebug from "./WeatherTempDebug";
 
 const WEATHER_REFRESH_INTERVAL = 1000 * 60 * 5;
 
@@ -15,6 +16,8 @@ class Weather extends React.Component {
 			showAlertDetails: false,
 			alerts: []
 		};
+		//show all temperatures to inspect colors
+		this.tempDebug = false;
 	}
 	async componentDidMount() {
 		this.update();
@@ -54,6 +57,14 @@ class Weather extends React.Component {
 	render() {
 		if (!this.state.currently) {
 			return null;
+		}
+
+		if (this.tempDebug) {
+			return (
+				<div id="weather">
+					<WeatherTempDebug/>
+				</div>
+			);
 		}
 
 		const {currently, minutely, alerts} = this.state;

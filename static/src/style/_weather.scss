@@ -1,49 +1,53 @@
 @import 'mixins';
 
+@mixin temperature($tempColor, $contrastingColor) {
+    color: $tempColor;
+}
+
 .temp100 {
-    color: #cc006c;
+    @include temperature(#f00, black);
 }
 .temp90 {
-    color: #fe3300;
+    @include temperature(#fe3300, black);
 }
 .temp80 {
-    color: #fe6601;
+    @include temperature(#fe6601, black);
 }
 .temp70 {
-    color: #fe8a33;
+    @include temperature(#fe8a33, black);
 }
 .temp60  {
-    color: #ffbf00;
+    @include temperature(#ffbf00, black);
 }
 .temp50 {
-    color: #fdff00;
+    @include temperature(#fdff00, black);
 }
 .temp40 {
-    color: #3fff6e;
+    @include temperature(#3fff6e, black);
 }
 .temp30 {
-    color: #34cbc6;
+    @include temperature(#34cbc6, black);
 }
 .temp20 {
-    color: #35cbcb;
+    @include temperature(#35cbcb, black);
 }
 .temp10 {
-    color: #009afe;
+    @include temperature(#009afe, black);
 }
 .temp0 {
-    color: #2f34c9;
+    @include temperature(#9169ff, white);
 }
 .temp-10 {
-    color: #6a00ce;
+    @include temperature(#eb03ff, white);
 }
 .temp-20 {
-    color: #9901f6;
+    @include temperature(#ff00a7, white);
 }
 .temp-30 {
-    color: #cd98fe;
+    @include temperature(#ff0083, white);
 }
 .temp-bottom {
-    color: #e3e1ed;
+    @include temperature(#ff0099, white);
 }
 
 #weather {
