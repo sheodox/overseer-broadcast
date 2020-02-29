@@ -95,15 +95,18 @@ class WeatherGraph extends React.Component {
 
 		//draw bands of color to indicate daylight
 		for (let i = 0; i < 7; i++) {
-			context.fillStyle = 'rgba(47,48,14,0.53)';
 			const startX = Math.max(axisBufferSpace, timeToX(dateFromTimestamp(daily[i].sunriseTime))),
 				endX = timeToX(dateFromTimestamp(daily[i].sunsetTime));
-			context.fillRect(
-				startX,
-				0,
-				endX - startX,
-				canvas.height
-			);
+
+			if (endX > axisBufferSpace) {
+				context.fillStyle = 'rgba(47,48,14,0.53)';
+				context.fillRect(
+					startX,
+					0,
+					endX - startX,
+					canvas.height
+				);
+			}
 		}
 
 		// vertical line for the start of each day
