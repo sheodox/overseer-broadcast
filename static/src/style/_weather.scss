@@ -88,6 +88,10 @@
             flex-basis: min-content;
             $smallFont: 0.8rem;
 
+            &[role=button] {
+                cursor: pointer;
+            }
+
             p {
                 margin: 0;
             }
@@ -162,4 +166,7 @@
 #weather-graph-container {
     overflow: auto;
     max-width: 95vw;
+}
+.forecast-detailed-hour {
+    margin: 1rem;
 }

@@ -175,7 +175,7 @@ class WeatherGraph extends React.Component {
 			if (x > axisBufferSpace) {
 				context.fillStyle = color;
 				context.fillText(
-					`${nice.shortTime(date)}`,
+					`${nice.superShortTime(date)}`,
 					x,
 					10
 				)

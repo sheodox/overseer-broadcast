@@ -1,5 +1,5 @@
 import React from 'react';
-import nice from './nice';
+import nice, {dateFromTimestamp} from './nice';
 import ForecastDay from "./ForecastDay";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Alerts from "./Alerts";
@@ -84,7 +84,14 @@ class Weather extends React.Component {
 		}
 
 		const daily = this.state.daily.data.map((day, index) => {
-				return <ForecastDay key={`forecast-${day.time}`} forecast={day} dayOffset={index}/>
+				const thisDayHourly = this.state.hourly.data.filter((hour) => {
+					const hourDate = dateFromTimestamp(hour.time),
+						dayDate = dateFromTimestamp(day.time);
+					return ['getDate', 'getMonth', 'getYear'].every(op => {
+						return hourDate[op]() === dayDate[op]();
+					})
+				});
+				return <ForecastDay key={`forecast-${day.time}`} forecast={day} hourly={thisDayHourly} dayOffset={index}/>
 			}),
 			fnToggleAlerts = this.toggleAlertDetails.bind(this),
 			alertButtonText = alerts.length > 1 ? `Weather Alerts (${alerts.length})` : 'Weather Alert';

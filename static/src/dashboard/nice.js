@@ -9,7 +9,7 @@ import {
 	faWind
 } from "@fortawesome/free-solid-svg-icons";
 
-const dateFromTimestamp = timestamp => {
+export const dateFromTimestamp = timestamp => {
 	const d = new Date();
 	d.setTime(timestamp * 1000);
 	return d;
@@ -35,7 +35,7 @@ function getColorClass(temp) {
 //really small amounts of snow really don't matter so ignore them;
 const SNOW_DISPLAY_THRESHOLD = 0.4;
 
-export default {
+const formatters = {
 	date: formatDateAs('toDateString'),
 	dateNumOnly: (timestamp) => {
 		const d = dateFromTimestamp(timestamp);
@@ -45,11 +45,24 @@ export default {
 		return formatDateAs('toDateString')(timestamp).replace(/ .*/, '');
 	},
 	time: formatDateAs('toLocaleTimeString'),
-	shortTime: date => {
+	//hh:mm without AM/PM, but in 12 hour time
+	superShortTime: date => {
 		const hours = date.getHours(),
 			displayHours = hours > 12 ? hours - 12 : hours,
 			displayMinutes = date.getMinutes().toString().padStart(2, '0');
-		return `${displayHours}:${displayMinutes}`;
+		return `${displayHours === 0 ? '12' : displayHours}:${displayMinutes}`;
+	},
+	//hh:mm p
+	shortTime: date => {
+		const hours = date.getHours();
+		const amPm = hours > 11 || hours === 0 ? 'PM' : 'AM';
+		return `${formatters.superShortTime(date)} ${amPm}`
+	},
+	shortHour: date => {
+		const hours = date.getHours(),
+			displayHours = hours > 12 ? hours - 12 : hours,
+			amPm = hours > 11 || hours === 0 ? 'PM' : 'AM';
+		return `${displayHours === 0 ? '12' : displayHours} ${amPm}`;
 	},
 	temp: num => {
 		return <span className={'temp ' + getColorClass(num)}>{Math.round(num)}°F</span>
@@ -94,3 +107,4 @@ export default {
 		}
 	}
 };
+export default formatters;
