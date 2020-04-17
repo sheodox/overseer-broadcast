@@ -25,8 +25,8 @@ class Clock extends React.Component {
 	render() {
 		return (
 			<div id="clock">
-				<p id="time">{this.state.time}</p>
 				<p id="date">{this.state.date}</p>
+				<p id="time">{this.state.time}</p>
 			</div>
 		);
 	}

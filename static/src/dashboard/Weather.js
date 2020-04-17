@@ -73,9 +73,11 @@ class Weather extends React.Component {
 		if (this.props.mode === 'minimal') {
 			return (
 				<div id="weather-minimal">
-					<p>
-						{nice.temp(currently.temperature)} {currently.summary}
+					<p id="minimal-temp">
+						<FontAwesomeIcon icon={nice.weatherIcon(currently)} />
+						{nice.temp(currently.temperature)}
 					</p>
+					<p>{currently.summary}</p>
 					{!!alerts.length && <p className="danger">
 						{alerts.length > 1 ? `${alerts.length} weather alerts` : alerts[0].title}
 					</p>}
