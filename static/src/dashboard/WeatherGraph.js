@@ -288,8 +288,8 @@ class WeatherGraph extends React.Component {
 
 		};
 
-		plotTemps(timeData);
 		plotTemps(apparentTimeData);
+		plotTemps(timeData);
 	}
 
 	render() {
