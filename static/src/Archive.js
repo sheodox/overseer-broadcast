@@ -118,7 +118,7 @@ class ArchiveViewer extends React.Component {
                 <ul>
                     {dayList.archives.map((archive) => {
                         const anchorStyles = {
-                            backgroundImage: `url(thumbnail/${archive.file})`
+                            backgroundImage: `url(thumbnail/${archive.file}.png)`
                         };
                         return <li key={archive.file}>
                             <a className="archive-select-link" style={anchorStyles} href='#' onClick={this.view.bind(this, archive)}>
@@ -131,7 +131,7 @@ class ArchiveViewer extends React.Component {
             </div>
         });
         
-        const videoSrc = 'archive/' + this.state.selectedArchive.file;
+        const videoSrc = `archive/${this.state.selectedArchive.file}.mp4`;
         return <section>
             <If renderWhen={!!this.state.selectedArchive.file}>
                 <video controls src={videoSrc} />

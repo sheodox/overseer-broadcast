@@ -10,6 +10,8 @@ app.use(require('./relay.js'));
 app.use(require('./lights'));
 app.use(require('./weather'));
 app.use(express.static('static'));
+app.use('/archive/', express.static('video/archives'));
+app.use('/thumbnail/', express.static('video/thumbnails'));
 
 //used to refresh headless pages
 app.use('/meta', (req, res) => {

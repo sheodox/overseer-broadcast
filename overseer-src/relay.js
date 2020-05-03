@@ -43,17 +43,6 @@ router.get('/info/archives', async (req, res) => {
     
     res.json({list, size})
 });
-router.get('/archive/:file', (req, res) => {
-    fs
-        .createReadStream(`./video/archives/${req.params.file}.mp4`)
-        .pipe(res);
-});
-router.get('/thumbnail/:file', (req, res) => {
-    fs
-        .createReadStream(`./video/thumbnails/${req.params.file}.png`)
-        .pipe(res);
-});
-
 
 function sendStreamSegment(res, ip) {
     res.header('Cache-Control', 'no-cache, no-store, must-revalidate');
