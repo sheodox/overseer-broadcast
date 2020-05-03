@@ -12,7 +12,7 @@ video {
 
 }
 @media (min-width: $singleColumnMax) {
-    video:not(.large-player) {
+    .streams video:not(.large-player) {
         $width: 47vw;
         max-width: $width;
         max-height: $width * $aspect;
