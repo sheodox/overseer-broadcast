@@ -1,0 +1,33 @@
+version: "3.7"
+services:
+    broadcast:
+        build:
+            context: .
+        devices:
+            - "/dev/vchiq:/dev/vchiq"
+        volumes:
+            - type: bind
+              source: /opt/vc
+              target: /opt/vc
+            - type: tmpfs
+              target: /broadcast-temp
+              tmpfs:
+                  size: 64m
+            - type: volume
+              source: video
+              target: /broadcast-video
+        restart: always
+    nginx:
+        image: nginx:1.18
+        volumes:
+            - type: volume
+              source: video
+              target: /broadcast-video
+            - type: bind
+              source: ./nginx.conf
+              target: /etc/nginx/nginx.conf
+        ports: 
+            - 80:80
+        restart: always
+volumes:
+    video:
