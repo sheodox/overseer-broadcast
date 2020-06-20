@@ -2,6 +2,7 @@ const config = require('./config'),
     util = require('util'),
     path = require('path'),
     fs = require('fs'),
+    writeFile = util.promisify(fs.writeFile),
     readdir = util.promisify(fs.readdir),
     stat = util.promisify(fs.stat),
     child_process = require('child_process'),
@@ -147,32 +148,31 @@ class StreamArchiver {
     getSegmentFileName(segmentNumber) {
         return `./video/segments-${this.camName}/segment-${segmentNumber}.mp4`;
     }
-    async nextSegment() {
-        const segmentFile = this.getSegmentFileName(this.streamSegmentCurrent++),
-            writeStream = fs.createWriteStream(segmentFile),
-            url = `http://${this.ip}/stream_dashinit.mp4`,
-            r = request
-                .get(url)
-                .on('error', () => {
-                    this.log(`error connecting to ${url}`);
-                });
-        writeStream.on('finish', async () => {
-            const hour = new Date().getHours();
-            //if the hour has changed, we need to archive footage now instead of waiting until the end,
-            //otherwise we end up having up to several minutes in the wrong archive
-            if (typeof this.lastSegmentHour === 'number' && this.lastSegmentHour !== hour) {
-                const d = new Date();
-                //add it to the previous hour's archive, don't just set the hour or if the date changes it'll be off by 24 hours
-                d.setTime(d.getTime() - HOUR_MS);
-                this.archiveSegments(`the hour has changed, archiving all old footage immediately`, d);
-            }
-            this.log(`received segments ${this.streamSegmentCurrent} / ${this.streamSegmentMax}`);
-            if (this.streamSegmentCurrent === this.streamSegmentMax) {
-                this.archiveSegments(`max of ${this.streamSegmentMax} segments reached for ${this.camName}, adding all to the archive`, new Date());
-            }
-            this.lastSegmentHour = hour;
-        });
-        r.pipe(writeStream);
+
+    /**
+     * Called every time a segment of video has been received.
+     * This will store the clip and possibly archive clips if enough have been gathered.
+     * @param clip - a video/mp4 buffer
+     * @returns {Promise<void>}
+     */
+    async nextSegment(clip) {
+        const segmentFile = this.getSegmentFileName(this.streamSegmentCurrent++);
+        await writeFile(segmentFile, clip)
+
+        const hour = new Date().getHours();
+        //if the hour has changed, we need to archive footage now instead of waiting until the end,
+        //otherwise we end up having up to several minutes in the wrong archive
+        if (typeof this.lastSegmentHour === 'number' && this.lastSegmentHour !== hour) {
+            const d = new Date();
+            //add it to the previous hour's archive, don't just set the hour or if the date changes it'll be off by 24 hours
+            d.setTime(d.getTime() - HOUR_MS);
+            this.archiveSegments(`the hour has changed, archiving all old footage immediately`, d);
+        }
+        this.log(`received segments ${this.streamSegmentCurrent} / ${this.streamSegmentMax}`);
+        if (this.streamSegmentCurrent === this.streamSegmentMax) {
+            this.archiveSegments(`max of ${this.streamSegmentMax} segments reached for ${this.camName}, adding all to the archive`, new Date());
+        }
+        this.lastSegmentHour = hour;
     }
     async deleteStaleRecordings() {
         const cleanDir = async p => {
