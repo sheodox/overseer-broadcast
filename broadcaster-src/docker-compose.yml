@@ -4,11 +4,9 @@ services:
         build:
             context: .
         devices:
-            - "/dev/vchiq:/dev/vchiq"
+            - /dev/vchiq:/dev/vchiq
+        privileged: true
         volumes:
-            - type: bind
-              source: /opt/vc
-              target: /opt/vc
             - type: tmpfs
               target: /broadcast-temp
               tmpfs:
@@ -16,6 +14,9 @@ services:
             - type: volume
               source: video
               target: /broadcast-video
+            - /opt/vc:/opt/vc:ro
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
         restart: always
     nginx:
         image: nginx:1.18
