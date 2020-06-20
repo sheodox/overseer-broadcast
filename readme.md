@@ -10,7 +10,18 @@ When the next segment of video is available, the broadcasting server will notify
  
 # Setup
  
-`MP4Box`, [`Nodejs`](https://nodejs.org/en/) and [`forever`](https://github.com/foreversd/forever) are required on each machine this is used on. On every broadcasting server `curl`, and `nginx` are required. `ffmpeg` is also needed on the overseer server. Static IPs should be used for every machine.
+## Overseer Server
+
+Requirements:
+
+* `nodejs`
+* `forever`
+* `ffmpeg`
+* `MP4Box`
+
+## Broadcasting Server
+
+[Specific requirements and setup are detailed in the broadcasting readme.](https://github.com/sheodox/overseer-broadcast/blob/master/broadcaster-src/README.md)
 
 ## Config
 On the overseer server a `config.json` is needed at the root level of the git clone, with IPs of each camera Raspberry Pi. You will also need a Dark Sky weather API key and coordinates for your location (Dark Sky API calls should not exceed ~300 per day).
@@ -36,26 +47,8 @@ On the overseer server a `config.json` is needed at the root level of the git cl
 ```
 Additionally you will need to run `npm install` to install the web server's dependencies.
 
-On each broadcasting server a `config.json` is needed like this:
-```
-{
-    "overseer-server": "192.168.1.200",
-    "save-directory": /mnt/overseer-broadcast"
-}
-```
-The `save-directory` should be a web root configured on an nginx server. Since it's saving files constantly you may want to make a small (~32MB) tmpfs ram disk for this purpose.
-
-You may need to add these caching related headers to your nginx config:
-```
-add_header Cache-Control "no-cache, no-store, must-revalidate";
-add_header Pragma "no-cache";
-add_header Expires "0";
-```
-
 ## Running
-On the overseer machine run `npm start`
-
-On each broadcaster run `npm run broadcast`
+On the Overseer server run `npm start`
 
 Go to http://[overseer-host-or-ip]:3200/ in your web browser.
 
