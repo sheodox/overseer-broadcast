@@ -64,7 +64,8 @@ function sendStreamSegment(res, ip) {
     res.send(clip);
 }
 router.use(bodyParser.raw({
-    type: 'video/mp4'
+    type: 'video/mp4',
+    limit: '10mb'
 }))
 //called by camera servers whenever there is a new update
 router.post('/update', async (req, res) => {
