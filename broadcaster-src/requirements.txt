@@ -1,0 +1,2 @@
+python-dotenv==0.13.0
+picamera==1.13
