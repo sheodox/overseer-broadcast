@@ -11,24 +11,7 @@ services:
               target: /broadcast-temp
               tmpfs:
                   size: 64m
-            - type: volume
-              source: video
-              target: /broadcast-video
             - /opt/vc:/opt/vc:ro
             - /etc/timezone:/etc/timezone:ro
             - /etc/localtime:/etc/localtime:ro
         restart: always
-    nginx:
-        image: nginx:1.18
-        volumes:
-            - type: volume
-              source: video
-              target: /broadcast-video
-            - type: bind
-              source: ./nginx.conf
-              target: /etc/nginx/nginx.conf
-        ports: 
-            - 80:80
-        restart: always
-volumes:
-    video:
