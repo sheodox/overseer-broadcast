@@ -71,6 +71,13 @@ router.use(bodyParser.raw({
 router.post('/update', async (req, res) => {
     const ip = req.ip.replace('::ffff:', '');
     console.log(`update from ${ip}`);
+
+    if (!broadcasters.some((b => b.ip === ip))) {
+        res.status(401);
+        res.send(`Your IP "${ip}" does not belong to a known broadcaster!`)
+        return;
+    }
+
     res.send('thanks camera');
 
     currentClips[ip] = {
