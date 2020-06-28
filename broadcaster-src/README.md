@@ -1,4 +1,7 @@
 # Camera Pi Setup
+
+There the install process can be automated by running `./install.sh`. Otherwise you can follow the manual install steps:
+
 1. Install `docker` and `docker-compose`
 2. Setup the camera to be accessible from within docker:
  create a file at /etc/udev/rules.d/99-camera.rules with the text: `SUBSYSTEM=="vchiq",MODE="0666"`
