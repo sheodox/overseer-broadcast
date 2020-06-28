@@ -63,13 +63,30 @@ function sendStreamSegment(res, ip) {
     res.header('Content-Type', 'video/mp4');
     res.send(clip);
 }
+
+function getIpFromReq(req) {
+    return req.ip.replace('::ffff:', '');
+}
+
+/**
+ * Used by the install script to verify that the device is a known broadcaster.
+ */
+router.get('/broadcaster-verify', (req, res) => {
+	const ip = getIpFromReq(req);
+    if (!broadcasters.some((b => b.ip === ip))) {
+        res.status(401);
+        res.send(`Your IP "${ip}" does not belong to a known broadcaster!`)
+        return;
+    }
+    res.send('');
+})
 router.use(bodyParser.raw({
     type: 'video/mp4',
     limit: '10mb'
 }))
 //called by camera servers whenever there is a new update
 router.post('/update', async (req, res) => {
-    const ip = req.ip.replace('::ffff:', '');
+    const ip = getIpFromReq(req);
     console.log(`update from ${ip}`);
 
     if (!broadcasters.some((b => b.ip === ip))) {
