@@ -24,7 +24,7 @@
     "css-loader": "^3.2.0",
     "express": "^4.17.1",
     "node-hue-api": "^4.0.5",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.13.1",
     "pug": "^2.0.4",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
