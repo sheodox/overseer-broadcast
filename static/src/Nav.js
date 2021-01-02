@@ -1,5 +1,9 @@
 import React from 'react';
 import {Link, withRouter} from 'react-router-dom';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faMoon} from "@fortawesome/free-solid-svg-icons";
+import lsCache from "./lsCache";
+const settings = lsCache('settings');
 
 class Nav extends React.Component {
     constructor(props) {
@@ -18,13 +22,20 @@ class Nav extends React.Component {
     render() {
         const list = this.list.map(this.createLink.bind(this));
         return <header>
-            <img alt="logo" className="logo" src="logo.png" />
-            <h1>{document.title}</h1>
+            <div>
+                <img alt="logo" className="logo" src="logo.png" />
+                <h1>{document.title}</h1>
+            </div>
             <nav>
                 <ul>
                     {list}
                 </ul>
             </nav>
+            {settings.touchpadMode &&
+                <button onClick={this.props.inactive}>
+                    <FontAwesomeIcon icon={faMoon}/> Sleep
+                </button>
+            }
         </header>
     }
 }

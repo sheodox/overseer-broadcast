@@ -47,6 +47,7 @@ class App extends React.Component {
         }
     }
     inactive() {
+        clearTimeout(this.inactiveTimeout);
         this.setState({
             active: false
         });
@@ -64,7 +65,7 @@ class App extends React.Component {
         return (
             <div onClick={this.active.bind(this)}>
                 <Router>
-                    <Nav />
+                    <Nav inactive={this.inactive.bind(this)} />
                     <Route path={"/"} exact component={Live} />
                     <Route path={"/archive"} component={Archive} />
                     <Route path={"/dashboard"} component={Dashboard} />
