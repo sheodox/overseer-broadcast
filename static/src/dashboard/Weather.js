@@ -113,7 +113,7 @@ class Weather extends React.Component {
 									<small className="nowrap">Feels like</small> <small className="nowrap">{nice.temp(currently.apparentTemperature)}</small>
 								</div>
 							</div>
-							<p>{minutely.summary}</p>
+							{minutely && <p>{minutely.summary}</p>}
 						</div>
 						{!!alerts.length && <button className="danger" onClick={fnToggleAlerts}>{alertButtonText}</button>}
 						{this.state.showAlertDetails && <Alerts alerts={alerts} closeAlerts={fnToggleAlerts} />}
