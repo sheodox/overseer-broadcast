@@ -6,8 +6,9 @@ rm $3/pivideo.h264
 for i in $(seq 1 4); do
 	curl -s --data-binary "@$3/stream_dashinit.mp4" \
 		-H "Content-Type: video/mp4" \
+		-H "Authorization: Bearer ${$4}" \
 		--connect-timeout 1 \
-		http://$2:3200/update
+		http://$2:3200/broadcaster/update
 
 	curl_exit_code=$?
 

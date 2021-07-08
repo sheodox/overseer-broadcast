@@ -15,6 +15,7 @@ save_directory = '/broadcast-temp'
 
 try:
     overseer_server = os.environ['OVERSEER_SERVER']
+    overseer_token = os.environ['OVERSEER_TOKEN']
 except KeyError as e:
     print(f'Missing .env file with {e.args[0]} defined.')
     sys.exit(1)
@@ -39,6 +40,6 @@ while True:
     camera.request_key_frame()
     
     log_location = subprocess.DEVNULL if silence_logs else None
-    subprocess.Popen(['./box.sh', str(fps), overseer_server, save_directory], stderr=log_location, stdout=log_location)
+    subprocess.Popen(['./box.sh', str(fps), overseer_server, save_directory, overseer_token], stderr=log_location, stdout=log_location)
 
 camera.stop_recording()
