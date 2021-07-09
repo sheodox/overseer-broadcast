@@ -10,7 +10,7 @@ load_dotenv()
 recording_time = 10
 fps = 10
 quality = 32
-silence_logs = True
+silence_logs = os.environ['SILENCE_LOGS'] == 'true'
 save_directory = '/broadcast-temp'
 
 try:

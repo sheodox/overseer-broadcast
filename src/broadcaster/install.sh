@@ -48,6 +48,7 @@ if [ ! -f .env ]; then
 OVERSEER_SERVER=${overseer_host}
 OVERSEER_TOKEN=${overseer_token}
 TZ=${timezone}
+SILENCE_LOGS=true
 EOL
 fi
 
