@@ -3,6 +3,8 @@ services:
     broadcast:
         build:
             context: .
+            args:
+                - APP_TZ: $TZ
         devices:
             - /dev/vchiq:/dev/vchiq
         privileged: true
