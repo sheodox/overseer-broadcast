@@ -17,7 +17,7 @@ if [ ! -f .env ]; then
 	read overseer_token
 	
 	#attempt to verify that this pi is an allowed broadcaster
-	curl -sf -H "Authorization: Bearer ${overseer_token}" "http://$overseer_host:3200/broadcaster/verify" > /dev/null
+	curl -sf -H "Authorization: Bearer ${overseer_token}" "http://$overseer_host/broadcaster/verify" > /dev/null
 	overseer_verify_code=$?
 
 	if [[ $overseer_verify_code -eq 6 ]]; then
