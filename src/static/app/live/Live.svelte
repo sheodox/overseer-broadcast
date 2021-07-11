@@ -13,6 +13,8 @@
 <div id="live" class="f-row f-wrap justify-content-center">
     {#each $cameras as camera}
         <Stream {camera} />
+    {:else}
+        <NoCameras />
     {/each}
 </div>
 
@@ -36,6 +38,7 @@
     import {settings} from "../stores/app";
     import {cameras, streamsActive} from "../stores/live";
     import Stream from "./Stream.svelte";
+    import NoCameras from "../NoCameras.svelte";
     import './live.scss';
     import Link from "../Link.svelte";
 

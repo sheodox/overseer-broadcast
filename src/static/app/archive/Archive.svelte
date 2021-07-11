@@ -3,6 +3,9 @@
         max-width: 100%;
     }
 </style>
+{#if !$cameras.length}
+    <NoCameras />
+{/if}
 
 <div class="page-content mt-2">
     {#if $activeRouteParams.clipFileName}
@@ -40,6 +43,8 @@
     import {getPrettyBytes} from "../stores/archive";
     import CameraArchive from "./CameraArchive.svelte";
     import {Icon, TabList, Tab} from 'sheodox-ui';
+    import NoCameras from "../NoCameras.svelte";
+
     const videoTitleFormat = new Intl.DateTimeFormat('en-US', {dateStyle: 'long', timeStyle: 'short'});
 
     $: viewingClip = $archives.find(archive => archive.file === $activeRouteParams.clipFileName)
@@ -59,5 +64,5 @@
 
     //auto-select the last tab if none has been selected yet, so we're looking
     // at today's archives by default
-    $: selectedTab = !selectedTab && tabs.length ? tabs[tabs.length - 1].id: selectedTab;
+    $: selectedTab = !selectedTab && tabs.length ? tabs[tabs.length - 1].id : selectedTab;
 </script>
