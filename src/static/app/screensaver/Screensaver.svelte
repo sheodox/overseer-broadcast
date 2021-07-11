@@ -34,8 +34,16 @@
 </div>
 
 <script>
+    import {onMount, onDestroy} from 'svelte';
     import {Icon} from 'sheodox-ui';
     import {alerts, currentWeather, weatherCodeToIcon, weatherCodeToDescription} from "../stores/weather";
     import Clock from "../dashboard/Clock.svelte";
     import Temperature from "../dashboard/Temperature.svelte";
+
+    onMount(() => {
+        document.body.classList.add('screensaver-engaged');
+    });
+    onDestroy(() => {
+        document.body.classList.remove('screensaver-engaged');
+    });
 </script>
