@@ -1,0 +1,49 @@
+version: '3.7'
+services:
+  app:
+    build:
+      context: .
+      target: dev
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+    volumes:
+      - ./data:/usr/src/app/data
+  postgres:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_USER: $PGUSER
+      POSTGRES_PASSWORD: $PGPASSWORD
+      POSTGRES_DB: $PGDATABASE
+    volumes:
+      - type: volume
+        source: postgres
+        target: /var/lib/postgresql/data
+        volume:
+          nocopy: true
+    restart: unless-stopped
+  nginx:
+    image: nginx:1.21-alpine
+    ports:
+      - 80:80
+      - 443:443
+      - 4001:4001
+    depends_on:
+      - app
+    restart: unless-stopped
+    volumes:
+      - ./public:/var/www/static
+  redis:
+    image: redis:6-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - type: volume
+        source: redis
+        target: /data
+        volume:
+          nocopy: true
+    restart: unless-stopped
+volumes:
+  postgres:
+  redis:

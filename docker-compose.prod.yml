@@ -1,0 +1,40 @@
+version: '3.7'
+services:
+  app:
+    build:
+      target: prod
+    restart: always
+    volumes:
+      - type: bind
+        source: ./static
+        target: /usr/src/app/public
+      - type: bind
+        source: ./video
+        target: /usr/src/app/video
+      - type: bind
+        source: ./data
+        target: /usr/src/app/data
+  nginx:
+    restart: always
+    volumes:
+      - type: bind
+        source: ./config/nginx/nginx.prod.conf
+        target: /etc/nginx/nginx.conf
+        read_only: true
+      - ../certbot/conf:/etc/letsencrypt
+      # mount certs in a static place that nginx can access without a dynamic config file
+      - ../certbot/conf/live/${LETSENCRYPT_DOMAIN}/:/etc/letsencrypt/overseer/certs
+      - ../certbot/www/:/var/www/certbot
+    # this is an autorestart to get new certs https://pentacent.medium.com/nginx-and-lets-encrypt-with-docker-in-less-than-5-minutes-b4b8a60d3a71
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+  postgres:
+    restart: always
+  redis:
+    restart: always
+  certbot:
+    restart: always
+    image: certbot/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    volumes:
+      - ../certbot/conf:/etc/letsencrypt
+      - ../certbot/www:/var/www/certbot

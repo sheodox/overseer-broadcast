@@ -1,0 +1,7 @@
+// don't show cursors on touchpads, Pi touchscreens still show a cursor, not needed.
+body.touchpad-mode {
+    cursor: none;
+    a, button {
+        cursor: none !important;
+    }
+}
