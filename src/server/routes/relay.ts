@@ -6,6 +6,7 @@ import {BroadcasterRequest, verifyBroadcaster} from "../middleware/integrations"
 import {verifyUserPermissions} from "../middleware/users";
 import {safeAsyncRoute} from "../middleware/safe-async-route";
 import {BroadcasterConfig, getBroadcasters} from "../config";
+import {relayLogger} from "../logger";
 
 export const relayRouter = Router();
 export const broadcasterRouter = Router();
@@ -96,7 +97,7 @@ broadcasterRouter.use(bodyParser.raw({
 broadcasterRouter.post('/update', async (req: BroadcasterRequest, res, next) => {
     try {
         const {id} = req.broadcaster;
-        console.log(`update from ${req.broadcaster.name} (${id})`);
+        relayLogger.debug(`update from ${req.broadcaster.name} (${id})`);
         res.send('thanks camera');
 
         currentClips[id] = {

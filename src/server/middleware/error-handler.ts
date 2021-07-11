@@ -1,5 +1,6 @@
 import {AppRequest} from "./integrations";
 import {Response, NextFunction} from "express";
+import {httpLogger} from "../logger";
 
 interface HttpError {
     status: number
@@ -26,15 +27,15 @@ export const errorHandler = (internal: boolean) => (error: Error | HttpError, re
         message = getHttpStatusDescription(status),
         level = (internal || status === 500) ? 'error' : 'info';
 
-    // httpLogger[level](`${message}: "${req.url}"`, {
-    //     status,
-    //     error: error instanceof Error ? error : undefined,
-    //     internal,
-    //     path: req.url,
-    //     userId: req.user?.id,
-    //     requestId: req.requestId,
-    //     userAgent: req.get('User-Agent')
-    // });
+    httpLogger[level](`${message}: "${req.url}"`, {
+        status,
+        error: error instanceof Error ? error : undefined,
+        internal,
+        path: req.url,
+        userId: req.user?.id,
+        requestId: req.requestId,
+        userAgent: req.get('User-Agent')
+    });
 
     if (process.env.NODE_ENV === 'development') {
         console.error("Http Route Error", error);

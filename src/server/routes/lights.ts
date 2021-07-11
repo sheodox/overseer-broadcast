@@ -6,6 +6,7 @@ import {safeAsyncRoute} from "../middleware/safe-async-route";
 import {validateBodySchema} from "../middleware/validate-body-schema";
 import Joi from "joi";
 import {verifyUserPermissions} from "../middleware/users";
+import {lightsLogger} from "../logger";
 
 export const router = Router();
 const {discovery, api} = v3,
@@ -61,7 +62,7 @@ class Lights {
 		//log info about the groups, if the IDs are wanted for external scripts reusing this functionality
 		if (isFirstCall) {
 			for (const group of groups) {
-				console.log(group.toStringDetailed());
+				lightsLogger.info(group.toStringDetailed());
 			}
 		}
 

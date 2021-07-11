@@ -40,6 +40,5 @@
 
     onMount(async () => {
         users = await fetch('/admin/users').then(res => res.json());
-        console.log({users})
     })
 </script>

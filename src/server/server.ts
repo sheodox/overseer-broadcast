@@ -1,4 +1,5 @@
 require('dotenv').config();
+import {appLogger} from "./logger";
 import express, {Request, Response} from 'express';
 import {relayRouter, broadcasterRouter} from './routes/relay';
 import {requestId} from "./middleware/request-id";
@@ -28,10 +29,6 @@ const bodyParser = require('body-parser'),
 		host: 'redis'
 	});
 
-app.use((req, res, next) => {
-	console.log(req.originalUrl);
-	next();
-})
 app.use(requestId);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -119,5 +116,7 @@ app.use('/admin', adminRouter);
 
 app.use(errorHandler(false));
 
-app.listen(port, () => console.log(`Overseer Broadcast listening on port ${port}`));
+app.listen(port, () => appLogger.info(`Overseer Broadcast started`));
 
+
+import './internal-server';

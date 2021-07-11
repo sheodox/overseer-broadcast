@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs/promises';
 import {exec as childProcessExec} from "child_process";
 import {promisify} from "util";
+import {relayLogger} from "./logger";
 
 const execpromisified = promisify(childProcessExec);
 
@@ -62,7 +63,7 @@ class StreamArchiver {
         d.setHours(6);
         d.setMinutes(0);
         d.setSeconds(0);
-        this.log(`scheduling delete check for ${d.toLocaleDateString()} ${d.toLocaleTimeString()}`);
+        relayLogger.debug(`scheduling delete check for ${d.toLocaleDateString()} ${d.toLocaleTimeString()}`);
         setTimeout(
             this.deleteStaleRecordings.bind(this),
             d.getTime() - Date.now());
@@ -84,11 +85,8 @@ class StreamArchiver {
         date.setMilliseconds(0);
         return `${this.id}-${date.getTime()}`;
     }
-    log(msg: string) {
-        console.log(`[archiver - ${this.id}] - ${msg}`);
-    }
     async archiveSegments(archiveReason: string, archiveDate: Date) {
-        this.log(archiveReason);
+        relayLogger.debug(archiveReason);
         const archiveFile = this.getCurrentArchiveName(archiveDate),
             start = Date.now();
         const catArgs = [];
@@ -100,11 +98,10 @@ class StreamArchiver {
             await exec(`MP4Box ${catArgs.join(' ')} ${this.pathInArchives(archiveFile)}.mp4`);
             await this.generateThumbnail(archiveFile);
 
-            this.log(`archiving segments took ${Date.now() - start}ms`);
+            relayLogger.debug(`archiving segments took ${Date.now() - start}ms`);
         }
-        catch(e) {
-            this.log(`error archiving ${archiveFile}`);
-            console.error(e);
+        catch(error) {
+            relayLogger.error(`error archiving ${archiveFile}`, {error});
         }
     }
     async fileExists(file: string) {
@@ -124,12 +121,12 @@ class StreamArchiver {
             .filter(f => f.indexOf(this.id) === 0)
             .map(f => f.replace(/\.mp4$/, ''));
 
-        this.log(`generating any missing thumbnails`);
+        relayLogger.debug(`generating any missing thumbnails`);
         let generated = 0;
         for (let i = 0; i < archives.length; i++) {
             generated += (await this.generateThumbnail(archives[i])) ? 1 : 0;
         }
-        this.log(`done generating ${generated} missing thumbnails`);
+        relayLogger.debug(`done generating ${generated} missing thumbnails`);
     }
 
     /**
@@ -143,7 +140,7 @@ class StreamArchiver {
             thumbnailExists = await this.fileExists(thumbnailPath);
 
         if (!thumbnailExists) {
-            this.log(`generating thumbnail for ${fileName}`);
+            relayLogger.debug(`generating thumbnail for ${fileName}`);
             await exec(`ffmpeg -i ${this.pathInArchives(fileName)}.mp4 -ss 00:00:01.000 -filter:v scale="280:-1" -vframes 1 ${thumbnailPath}`);
             await sharp(
                 await fs.readFile(thumbnailPath)
@@ -178,7 +175,7 @@ class StreamArchiver {
             d.setTime(d.getTime() - HOUR_MS);
             this.archiveSegments(`the hour has changed, archiving all old footage immediately`, d);
         }
-        this.log(`received segments ${this.streamSegmentCurrent} / ${this.streamSegmentMax}`);
+        relayLogger.debug(`received segments ${this.streamSegmentCurrent} / ${this.streamSegmentMax}`);
         if (this.streamSegmentCurrent === this.streamSegmentMax) {
             this.archiveSegments(`max of ${this.streamSegmentMax} segments reached for ${this.id}, adding all to the archive`, new Date());
         }
@@ -199,7 +196,7 @@ class StreamArchiver {
                     d.setMilliseconds(0);
 
                     if (Date.now() - d.getTime() > this.archiveKeepMaxMS) {
-                        this.log(`${file} - is from ${d.toLocaleDateString()} which is beyond the keep limit, deleting`);
+                        relayLogger.debug(`${file} - is from ${d.toLocaleDateString()} which is beyond the keep limit, deleting`);
                         await fs.unlink(path.join(dirPath, file));
                     }
                 })

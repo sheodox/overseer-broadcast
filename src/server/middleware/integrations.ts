@@ -2,6 +2,7 @@ import {User} from '@prisma/client';
 import jwt from 'jsonwebtoken';
 import {NextFunction, Request, Response} from "express";
 import {getBroadcasters, BroadcasterConfig} from "../config";
+import {integrationsLogger} from "../logger";
 const {INTEGRATION_SECRET} = process.env;
 
 interface Integration {
@@ -26,6 +27,7 @@ function getJWTPayloadFromRequest<IntegrationTokenType extends Integration>(req:
 }
 
 export function generateJWT(obj: Omit<Integration, 'issued'>) {
+    integrationsLogger.info(`Generating ${obj.scope} integration token.`);
     (obj as Integration).issued = Date.now();
     return jwt.sign(obj, INTEGRATION_SECRET);
 }
@@ -51,6 +53,20 @@ export function verifyLightsIntegration(req: Request, res: Response, next: NextF
         const payload = getJWTPayloadFromRequest<Integration>(req);
 
         if (payload.scope !== 'lights') {
+            return next({status: 403});
+        }
+
+        next();
+    } catch(error) {
+        next({status: 401});
+    }
+}
+
+export function verifyLoggingIntegration(req: Request, res: Response, next: NextFunction) {
+    try {
+        const payload = getJWTPayloadFromRequest<Integration>(req);
+
+        if (payload.scope !== 'logs') {
             return next({status: 403});
         }
 

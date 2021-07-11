@@ -10,11 +10,16 @@
     </svg>
 </Header>
 
-<div class="page-content">
+<div class="page-content f-column gap-5">
     <div class="integration">
         <RegisterCamera />
     </div>
-    <UserPermissions />
+    <div class="integration">
+        <Integration />
+    </div>
+    <div>
+        <UserPermissions />
+    </div>
 </div>
 
 
@@ -25,4 +30,5 @@
     import {Header, Toasts} from 'sheodox-ui';
     import RegisterCamera from "./RegisterCamera.svelte";
     import UserPermissions from "./UserPermissions.svelte";
+    import Integration from "./Integration.svelte";
 </script>

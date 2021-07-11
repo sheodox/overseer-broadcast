@@ -9,6 +9,7 @@ import Joi from "joi";
 import {validateBodySchema} from "../middleware/validate-body-schema";
 import {requireAuth} from "../middleware/users";
 import {safeAsyncRoute} from "../middleware/safe-async-route";
+import {authLogger} from "../logger";
 
 export const router = Router();
 
@@ -20,7 +21,7 @@ passport.use(new LocalStrategy(
                 passwordCorrect = user && await bcrypt.compare(password, user.passwordHash);
 
             if (passwordCorrect) {
-                // authLogger.info(`User logged in ${user.id}`);
+                authLogger.info(`User logged in ${user.id}`);
                 const safeUser = await findUserNoSensitiveData({id: user.id});
                 done(null, safeUser);
             } else {
@@ -102,13 +103,13 @@ router.post('/signup', validateBodySchema(signupSchema), safeAsyncRoute(async (r
                 passwordHash
             }
         });
-    // authLogger.info(`New user signed up ${user.id}`);
+    authLogger.info(`New user signed up ${user.id}`);
 
     const safeUser = await findUserNoSensitiveData({id: user.id})
 
     req.login(safeUser, error => {
         if (error) {
-            // authLogger.error(`Error logging user in ${user.id}`, {error});
+            authLogger.error(`Error logging user in ${user.id}`, {error});
             next({status: 500})
         }
         else {

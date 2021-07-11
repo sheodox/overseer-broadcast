@@ -1,6 +1,6 @@
 <TextInput {value} {id}>
     {label}
-    <button type="button" slot="append" on:click={copy}>
+    <button type="button" slot="append" on:click={copy} class="primary">
         Copy
     </button>
 </TextInput>

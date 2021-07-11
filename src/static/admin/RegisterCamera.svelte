@@ -3,7 +3,7 @@
 <form on:submit|preventDefault={submit} class="m-3">
     <TextInput id="camera-name" bind:value={name}>
         Camera Name
-        <button slot="append">Add</button>
+        <button slot="append" class="primary">Add</button>
     </TextInput>
 </form>
 

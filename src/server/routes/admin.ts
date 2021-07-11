@@ -42,6 +42,16 @@ router.post('/integration/broadcaster', validateBodySchema(broadcasterSchema), s
     })
 }));
 
+const genericJwtScopeSchema = Joi.object({
+    scope: Joi.string().valid('logs', 'lights')
+});
+
+router.post('/integration/generate', validateBodySchema(genericJwtScopeSchema), safeAsyncRoute(async (req, res) => {
+    res.json({
+        jwt: generateJWT({scope: req.body.scope})
+    });
+}))
+
 router.get('/users', safeAsyncRoute(async (req, res) => {
     res.json(
         await prisma.user.findMany({
