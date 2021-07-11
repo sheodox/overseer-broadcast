@@ -18,9 +18,6 @@ services:
     restart: always
     volumes:
       - type: bind
-        source: ./public
-        target: /usr/src/app/public
-      - type: bind
         source: ./config/nginx/nginx.prod.conf
         target: /etc/nginx/nginx.conf
         read_only: true
