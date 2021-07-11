@@ -8,7 +8,7 @@ for i in $(seq 1 4); do
 		-H "Content-Type: video/mp4" \
 		-H "Authorization: Bearer $4" \
 		--connect-timeout 1 \
-		http://$2/broadcaster/update
+		$2/broadcaster/update
 
 	curl_exit_code=$?
 
