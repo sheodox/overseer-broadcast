@@ -15,5 +15,10 @@ export const getBroadcasters = () => {
 };
 
 export const addBroadcaster = (broadcaster: BroadcasterConfig) => {
-    broadcasterCache.broadcasters.push(broadcaster);
+    // use an assignment so this automatically saves, otherwise
+    // the broadcaster will disappear between restarts
+    broadcasterCache.broadcasters = [
+        ...broadcasterCache.broadcasters,
+        broadcaster
+    ];
 }
