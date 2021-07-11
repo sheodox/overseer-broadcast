@@ -24,6 +24,7 @@
     <p>
         {weatherCodeToDescription(weather.values.weatherCode)}
     </p>
+    <SnowAccumulation {hourly} />
 </button>
 
 {#if showDetails}
@@ -39,6 +40,7 @@
     import {getDayName, weatherCodeToIcon, weatherCodeToDescription, hourlyWeather} from "../stores/weather";
     import Temperature from "./Temperature.svelte";
     import DailyWeatherDetails from "./DailyWeatherDetails.svelte";
+    import SnowAccumulation from "./SnowAccumulation.svelte";
 
     export let weather;
     let showDetails = false;

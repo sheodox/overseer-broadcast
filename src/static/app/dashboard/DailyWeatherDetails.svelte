@@ -13,6 +13,9 @@
             <th>Time</th>
             <th>Temperature</th>
             <th>Precip %</th>
+            {#if hasSnow}
+                <th>Snowfall</th>
+            {/if}
         </tr>
         </thead>
         <tbody>
@@ -21,6 +24,9 @@
                 <td>{shortTime(interval.startTime)}</td>
                 <td><Temperature temperature={interval.values.temperature} /></td>
                 <td>{interval.values.precipitationProbability}%</td>
+                {#if hasSnow}
+                    {interval.values.snowAccumulation.toFixed(2)}" snow
+                {/if}
             </tr>
         {/each}
         </tbody>
@@ -37,6 +43,8 @@
 
     export let weather;
     export let hourly;
+
+    $: hasSnow = hourly.some(hour => hour.values.snowAccumulation > 0);
 
     function shortTime(dateStr) {
         return shortTimeFormat.format(new Date(dateStr));

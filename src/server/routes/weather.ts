@@ -34,6 +34,7 @@ class Weather {
 							"windGust",
                             "sunriseTime",
 							"sunsetTime",
+							"snowAccumulation",
 							"temperature",
 							"temperatureApparent",
 							"cloudCover",
