@@ -1,4 +1,4 @@
-import {getArchiveSettings, getBroadcasters} from "./config";
+import {getBroadcasters} from "./config";
 import sharp from 'sharp';
 import path from 'path';
 import fs from 'fs/promises';
@@ -6,7 +6,8 @@ import {exec as childProcessExec} from "child_process";
 import {promisify} from "util";
 import {relayLogger} from "./logger";
 
-const execpromisified = promisify(childProcessExec);
+const execpromisified = promisify(childProcessExec),
+    {ARCHIVE_DAYS} = process.env;
 
 const exec = async (args: string) => {
     try {
@@ -33,12 +34,11 @@ class StreamArchiver {
     constructor(id: string, camName: string) {
         this.id = id;
         this.camName = camName;
-        const archiveSettings = getArchiveSettings();
-        if (!archiveSettings || !archiveSettings.daysToKeep) {
-            throw new Error(`must specify 'daysToKeep'`);
+        if (!ARCHIVE_DAYS) {
+            throw new Error(`Error: Must specify 'ARCHIVE_DAYS' in .env`);
         }
 
-        this.archiveKeepMaxMS = archiveSettings.daysToKeep * DAY_MS;
+        this.archiveKeepMaxMS = parseInt(ARCHIVE_DAYS, 10) * DAY_MS;
 
         this.mkdir(`./video/segments-${this.id}`);
         this.mkdir(ARCHIVE_PATH);

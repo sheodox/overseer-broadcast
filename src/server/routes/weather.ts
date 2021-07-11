@@ -3,10 +3,11 @@ import axios from 'axios';
 import {safeAsyncRoute} from "../middleware/safe-async-route";
 import {verifyUserPermissions} from "../middleware/users";
 import {weatherLogger} from "../logger";
+import {Cache} from "../cache";
 
 export const router = Router();
 router.use(verifyUserPermissions);
-const cache = require('../cache')('weather');
+const cache = Cache('weather');
 const {LOCATION_LATITUDE, LOCATION_LONGITUDE} = process.env;
 
 const WEATHER_DATA_STALE_TIME = 1000 * 60 * 5; // five minutes

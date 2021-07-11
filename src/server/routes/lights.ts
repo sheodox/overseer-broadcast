@@ -7,6 +7,7 @@ import {validateBodySchema} from "../middleware/validate-body-schema";
 import Joi from "joi";
 import {verifyUserPermissions} from "../middleware/users";
 import {lightsLogger} from "../logger";
+import {Cache} from '../cache';
 
 export const router = Router();
 const {discovery, api} = v3,
@@ -17,7 +18,7 @@ const {discovery, api} = v3,
 		on:	new GroupLightState().on(true),
 		off: new GroupLightState().off()
 	},
-	cache = require('../cache')('lights');
+	cache = Cache('lights');
 
 router.use(verifyUserPermissions);
 

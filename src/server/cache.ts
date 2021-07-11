@@ -8,7 +8,7 @@ try {
 	fsSync.mkdirSync('./data');
 }
 
-module.exports = (cacheName: string) => {
+export const Cache = (cacheName: string) => {
 	const cachePath = `./data/${cacheName}.json`;
 
 	let data: Record<string, any> = {};

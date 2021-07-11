@@ -8,6 +8,11 @@ fi
 
 deploy_target=$1
 
+mkdir -p video/thumbnails
+mkdir -p video/archives
+mkdir -p data
+mkdir -p public
+
 if [[ $deploy_target == "dev" ]]; then
   docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 elif [[ $deploy_target  == "prod" ]]; then
