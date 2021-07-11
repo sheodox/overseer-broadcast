@@ -1,0 +1,49 @@
+@mixin temperature($tempColor, $contrastingColor) {
+    color: $tempColor;
+}
+
+.temp100 {
+    @include temperature(#f00, black);
+}
+.temp90 {
+    @include temperature(#fe3300, black);
+}
+.temp80 {
+    @include temperature(#fe6601, black);
+}
+.temp70 {
+    @include temperature(#fe8a33, black);
+}
+.temp60  {
+    @include temperature(#ffbf00, black);
+}
+.temp50 {
+    @include temperature(#fdff00, black);
+}
+.temp40 {
+    @include temperature(#3fff6e, black);
+}
+.temp30 {
+    @include temperature(#34cbc6, black);
+}
+.temp20 {
+    @include temperature(#35cbcb, black);
+}
+.temp10 {
+    @include temperature(#009afe, black);
+}
+.temp0 {
+    @include temperature(#9169ff, white);
+}
+.temp-10 {
+    @include temperature(#eb03ff, white);
+}
+.temp-20 {
+    @include temperature(#ff00a7, white);
+}
+.temp-30 {
+    @include temperature(#ff0083, white);
+}
+.temp-bottom {
+    @include temperature(#ff0099, white);
+}

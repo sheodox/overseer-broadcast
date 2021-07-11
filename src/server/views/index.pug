@@ -1,0 +1,7 @@
+extends layout
+
+block content
+    div#app-root
+    script.
+        window.app = !{appBootstrap}
+    script(src='/' + manifest['main.js'])
