@@ -1,4 +1,4 @@
-<video bind:this={video} {src} muted controls></video>
+<video bind:this={video} {src} muted controls class="p-2"></video>
 
 <script>
     import {onMount, onDestroy} from 'svelte';
