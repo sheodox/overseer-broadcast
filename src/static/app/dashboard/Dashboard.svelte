@@ -1,4 +1,11 @@
-<div class="f-row">
+<style>
+    @media (max-width: 700px) {
+        .dashboard {
+            flex-direction: column;
+        }
+    }
+</style>
+<div class="dashboard f-row">
     <div class="f-column m-1">
         <Clock />
         <Lights />
