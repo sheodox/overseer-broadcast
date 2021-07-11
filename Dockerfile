@@ -1,4 +1,4 @@
-FROM node:14 AS dev
+FROM node:14-buster AS dev
 WORKDIR /usr/src/app
 RUN apt update -y && apt install -y ffmpeg gpac
 
