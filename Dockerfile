@@ -13,4 +13,4 @@ COPY . .
 RUN npx prisma generate
 
 # need to build in the CMD, because assets are bind mounted and served by nginx instead
-CMD npm run build:prod && npx prisma migrate deploy && node src/server/server.js
+CMD npm run build-server:prod && npm run build-static:prod && npx prisma migrate deploy && node src/server/server.js
