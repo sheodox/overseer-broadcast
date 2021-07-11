@@ -216,4 +216,13 @@ getBroadcasters().forEach(({id, name}) => {
     archivers[id] = new StreamArchiver(id, name);
 });
 
+//check occasionally if there are new broadcasters added since the server last started
+setInterval(() => {
+    getBroadcasters().forEach(broadcaster => {
+        if (!archivers[broadcaster.id]) {
+            archivers[broadcaster.id] = new StreamArchiver(broadcaster.id, broadcaster.name);
+        }
+    })
+}, 60 * 1000);
+
 module.exports = archivers;
