@@ -10,6 +10,12 @@ import {relayLogger} from "../logger";
 
 export const relayRouter = Router();
 export const broadcasterRouter = Router();
+(async() => {
+    const dirs = ['./video/archives', './video/thumbnails'];
+    for (const dir of dirs) {
+        await fs.mkdir(dir, {recursive: true});
+    }
+})();
 
 const archiver = require('../archiver'),
     broadcasters = getBroadcasters(),
