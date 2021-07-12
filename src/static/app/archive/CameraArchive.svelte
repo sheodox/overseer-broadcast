@@ -1,7 +1,7 @@
 <h2>{camera.name}</h2>
 <div class="f-row f-wrap justify-content-center gap-2">
     {#each clips as clip}
-        <Link href="/archive/{clip.file}" classes="card clickable p-2">
+        <Link href="/archive/{clip.file}" classes="card clickable p-2" on:followed={scrollTop}>
             <img src="/thumbnail/{clip.file}.webp" />
             <br>
             <p class="m-0 text-align-center">
@@ -20,6 +20,10 @@
         const date = new Date(dateMs);
 
         return timeDateFormat.format(date);
+    }
+
+    function scrollTop() {
+        window.scrollTo(0, 0)
     }
 
     export let camera;
