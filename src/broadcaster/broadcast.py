@@ -23,7 +23,17 @@ except KeyError as e:
 print("Overseer Broadcast camera running!")
 
 camera = picamera.PiCamera(resolution=(1280, 720), framerate=fps)
-stream = picamera.PiCameraCircularIO(camera, seconds=recording_time)
+# let it store a tiny bit more than we want to save in a clip
+# (this is unconfirmed yet, but I'm assuming that since the recording
+# loop waits until it exceeds the recorded_time to save a clip it might
+# be letting the keyframe at the beginning of the clip get cut off and
+# the clip in turn could be getting cut off a bit. attempting to give it
+# a little bit of extra wiggle room so we should always have 100% of the
+# video data we want to be storing. if this assumption is incorrect
+# then we can try to clear the frame buffer between clips and try and save
+# more than the elapsed duration to try and save 100% of the frames without
+# trying to just get there by timing it)
+stream = picamera.PiCameraCircularIO(camera, seconds=recording_time + 5)
 
 camera.annotate_background = picamera.Color('black')
 camera.start_recording(stream, format='h264', quality=quality)
