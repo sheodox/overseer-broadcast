@@ -2,6 +2,12 @@
     #lights {
         max-width: 30rem;
     }
+    button {
+        height: 4rem;
+    }
+    :global(.touchpad-mode) button:not(.primary):hover {
+        background: transparent;
+    }
 </style>
 
 <div id="lights">
