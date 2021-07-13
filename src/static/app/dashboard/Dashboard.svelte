@@ -1,11 +1,17 @@
 <style>
     .dashboard {
-        max-width: 1300px;
+        max-width: 100vw;
         margin: 0 auto;
+        overflow: auto;
     }
     @media (max-width: 700px) {
         .dashboard {
             flex-direction: column;
+        }
+    }
+    @media (min-width: 1300px) {
+        .dashboard {
+            width: 1300px;
         }
     }
 </style>
