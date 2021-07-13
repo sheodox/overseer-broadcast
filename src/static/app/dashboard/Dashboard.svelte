@@ -1,4 +1,8 @@
 <style>
+    .dashboard {
+        max-width: 1300px;
+        margin: 0 auto;
+    }
     @media (max-width: 700px) {
         .dashboard {
             flex-direction: column;
